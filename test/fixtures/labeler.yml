@@ -35,6 +35,7 @@ metadata:
 rules:
   - verbs:
       - get
+      - list
       - watch
       - update
     apiGroups:
