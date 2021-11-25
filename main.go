@@ -69,6 +69,7 @@ func (mu *mutator) Add(obj interface{}) {
 			return
 		}
 	}
+	log.Infoln("Processing:", nodeName)
 
 	// ProviderID
 	// EC2 - aws:///us-east-1c/i-0e190165ce4facc0f
