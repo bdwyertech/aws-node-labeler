@@ -74,6 +74,10 @@ func (mu *mutator) Add(obj interface{}) {
 	// EC2 - aws:///us-east-1c/i-0e190165ce4facc0f
 	// Fargate - aws:///us-east-1b/b7af340c11-9ec3eeb6643c4ea58b0285cefd83ef94/fargate-ip-10-65-48-87.ec2.internal
 	instanceID := filepath.Base(node.Spec.ProviderID)
+	if !strings.HasPrefix(instanceID, "aws:/") {
+		log.Debugln("Not an AWS Node... Skipping.")
+		return
+	}
 	instanceAz := strings.Split(strings.TrimPrefix(node.Spec.ProviderID, "aws:///"), "/")[0]
 	var region string
 	if l := len(instanceAz); l > 0 {
