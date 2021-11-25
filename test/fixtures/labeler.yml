@@ -1,0 +1,56 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: labeler
+  namespace: kube-system
+  labels:
+    app: labeler
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: labeler
+    spec:
+      containers:
+        - name: labeler
+          image: 'bdwyertech/eks-lifecycle-labeler:latest'
+      serviceAccountName: labeler
+      serviceAccount: labeler
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: labeler
+  namespace: kube-system
+  annotations:
+    eks.amazonaws.com/role-arn: 'arn:aws:iam::123456789123:role/MyRole'
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: labeler
+  labels:
+    app: labeler
+rules:
+  - verbs:
+      - get
+      - watch
+      - update
+    apiGroups:
+      - ''
+    resources:
+      - nodes
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: labeler
+subjects:
+  - kind: ServiceAccount
+    name: labeler
+    namespace: kube-system
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: labeler
