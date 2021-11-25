@@ -69,7 +69,6 @@ func (mu *mutator) Add(obj interface{}) {
 			return
 		}
 	}
-	log.Infoln("Processing:", nodeName)
 
 	// ProviderID
 	// EC2 - aws:///us-east-1c/i-0e190165ce4facc0f
@@ -116,14 +115,14 @@ func (mu *mutator) Add(obj interface{}) {
 		lifecycle = "SPOT"
 	}
 
+	var modified bool
 	labels := node.GetLabels()
-	existing := len(labels)
-
 	if val, ok := labels["eks.amazonaws.com/capacityType"]; !ok || val != lifecycle {
 		labels["eks.amazonaws.com/capacityType"] = lifecycle
+		modified = true
 	}
 
-	if existing != len(labels) {
+	if modified {
 		n, err := mu.client.CoreV1().Nodes().Get(mu.ctx, nodeName, metav1.GetOptions{})
 		if err != nil {
 			log.Error(err.Error())
@@ -135,6 +134,6 @@ func (mu *mutator) Add(obj interface{}) {
 			log.Error(err.Error())
 			return
 		}
-		log.Info("Added new kubernetes labels.")
+		log.Info("Modified labels")
 	}
 }
