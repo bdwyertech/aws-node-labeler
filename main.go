@@ -73,20 +73,23 @@ func main() {
 type Node struct {
 	*corev1.Node
 	updated bool
+	log     *log.Entry
 }
 
 func (n *Node) Label(key, value string) {
 	labels := n.GetLabels()
 	if val, ok := labels[key]; !ok || val != value {
+		n.log.Infof("Setting Label: %s=%s", key, value)
 		labels[key] = value
 		n.updated = true
 	}
 }
 
 func (mu *mutator) Add(obj interface{}) {
-	node := Node{obj.(*corev1.Node), false}
-	nodeName := node.GetName()
+	nodeObj := obj.(*corev1.Node)
+	nodeName := nodeObj.GetName()
 	log := log.WithFields(log.Fields{"node": nodeName})
+	node := Node{nodeObj, false, log}
 
 	if val, ok := node.GetLabels()["eks.amazonaws.com/compute-type"]; ok {
 		if val == "fargate" {
@@ -148,13 +151,12 @@ func (mu *mutator) Add(obj interface{}) {
 	node.Label("eks.amazonaws.com/capacityType", lifecycle)
 
 	if node.updated {
-		n := obj.(*corev1.Node)
-		n.SetLabels(node.GetLabels())
-		_, err = mu.client.CoreV1().Nodes().Update(mu.ctx, n, metav1.UpdateOptions{})
+		nodeObj.SetLabels(node.GetLabels())
+		_, err = mu.client.CoreV1().Nodes().Update(mu.ctx, nodeObj, metav1.UpdateOptions{})
 		if err != nil {
 			log.Error(err)
 			return
 		}
-		log.Info("Modified labels")
+		log.Info("Updated Node")
 	}
 }
