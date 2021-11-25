@@ -2,12 +2,17 @@ package main
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
+	"io"
 	"os"
 	"path/filepath"
 	"strings"
 
 	log "github.com/sirupsen/logrus"
+
+	"github.com/Jeffail/gabs/v2"
+	"gopkg.in/yaml.v3"
 
 	"github.com/aws/aws-sdk-go-v2/config"
 	"github.com/aws/aws-sdk-go-v2/service/ec2"
@@ -24,7 +29,16 @@ import (
 
 type mutator struct {
 	client *kubernetes.Clientset
+	config Config
 	ctx    context.Context
+}
+
+type Config struct {
+	LabelPrefix string `yaml:"label_prefix"`
+	Labels      []struct {
+		Name  string `yaml:"name"`
+		Value string `yaml:"value"`
+	} `yaml:"labels"`
 }
 
 func init() {
@@ -42,17 +56,36 @@ func init() {
 // https://firehydrant.io/blog/stay-informed-with-kubernetes-informers/
 
 func main() {
-	config, err := clientcmd.BuildConfigFromFlags("", os.Getenv("KUBECONFIG"))
-	if err != nil {
-		log.Fatal(err)
-	}
-	client, err := kubernetes.NewForConfig(config)
-	if err != nil {
-		log.Fatal(err)
-	}
-	log.Infoln("Target:", config.Host)
+	var cfg Config
+	cfg.LabelPrefix = "aws.bdwyertech.net"
+	if val, ok := os.LookupEnv("CONFIG_FILE"); ok {
+		cfgFile, err := os.Open(val)
+		if err != nil {
+			log.Fatal(err)
+		}
 
-	mu := &mutator{client, context.Background()}
+		cfgBytes, err := io.ReadAll(cfgFile)
+		if err != nil {
+			log.Fatal(err)
+		}
+		cfgFile.Close()
+
+		if err = yaml.Unmarshal(cfgBytes, &cfg); err != nil {
+			log.Fatal(err)
+		}
+	}
+
+	kubeconfig, err := clientcmd.BuildConfigFromFlags("", os.Getenv("KUBECONFIG"))
+	if err != nil {
+		log.Fatal(err)
+	}
+	client, err := kubernetes.NewForConfig(kubeconfig)
+	if err != nil {
+		log.Fatal(err)
+	}
+	log.Infoln("Target:", kubeconfig.Host)
+
+	mu := &mutator{client, cfg, context.Background()}
 
 	factory := informers.NewSharedInformerFactory(client, 0)
 	informer := factory.Core().V1().Nodes().Informer()
@@ -149,6 +182,22 @@ func (mu *mutator) Add(obj interface{}) {
 	}
 
 	node.Label("eks.amazonaws.com/capacityType", lifecycle)
+
+	jsonBytes, err := json.Marshal(instance)
+	if err != nil {
+		log.Fatal(err)
+	}
+	instanceObj, err := gabs.ParseJSON(jsonBytes)
+	if err != nil {
+		log.Fatal(err)
+	}
+	for _, v := range mu.config.Labels {
+		if pfx := "instance."; strings.HasPrefix(v.Value, pfx) {
+			if val := instanceObj.Path(strings.TrimPrefix(v.Value, pfx)).Data(); val != nil {
+				node.Label(fmt.Sprintf("%s/%s", mu.config.LabelPrefix, v.Name), val.(string))
+			}
+		}
+	}
 
 	if node.updated {
 		nodeObj.SetLabels(node.GetLabels())

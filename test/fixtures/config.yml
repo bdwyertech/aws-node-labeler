@@ -1,0 +1,10 @@
+label_prefix: aws.myorg.net
+labels:
+  - name: zone
+    value: instance.Placement.AvailabilityZone
+  - name: image
+    value: instance.ImageId
+  - name: instance
+    value: instance.InstanceId
+  - name: networkInterface
+    value: instance.NetworkInterfaces.0.NetworkInterfaceId
