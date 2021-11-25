@@ -11,10 +11,24 @@ spec:
   selector:
     matchLabels:
       app: labeler
+  template:
+    metadata:
+      labels:
+        app: labeler
     spec:
       containers:
         - name: labeler
-          image: 'bdwyertech/eks-lifecycle-labeler:latest'
+          image: "bdwyertech/eks-lifecycle-labeler:latest"
+          volumeMounts:
+            - name: config-volume
+              mountPath: /etc/config
+          env:
+            - name: CONFIG_FILE
+              value: /etc/config/config.yml
+      volumes:
+        - name: config-volume
+          configMap:
+            name: labeler-config
       serviceAccountName: labeler
       serviceAccount: labeler
 ---
@@ -39,7 +53,7 @@ rules:
       - watch
       - update
     apiGroups:
-      - ''
+      - ""
     resources:
       - nodes
 ---
@@ -55,3 +69,21 @@ roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
   name: labeler
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: labeler-config
+  namespace: kube-system
+data:
+  config.yml: |-
+    label_prefix: aws.myorg.net
+    labels:
+      - name: zone
+        value: instance.Placement.AvailabilityZone
+      - name: image
+        value: instance.ImageId
+      - name: instance
+        value: instance.InstanceId
+      - name: networkInterface
+        value: instance.NetworkInterfaces.0.NetworkInterfaceId
