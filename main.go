@@ -27,6 +27,18 @@ type mutator struct {
 	ctx    context.Context
 }
 
+func init() {
+	log.SetFormatter(&log.JSONFormatter{})
+	// Debug Logging
+	if _, ok := os.LookupEnv("DEBUG"); ok {
+		log.SetLevel(log.DebugLevel)
+	}
+	if _, ok := os.LookupEnv("DEBUG_TRACE"); ok {
+		log.SetLevel(log.DebugLevel)
+		log.SetReportCaller(true)
+	}
+}
+
 // https://firehydrant.io/blog/stay-informed-with-kubernetes-informers/
 
 func main() {
@@ -58,8 +70,21 @@ func main() {
 	<-stopper
 }
 
+type Node struct {
+	*corev1.Node
+	updated bool
+}
+
+func (n *Node) Label(key, value string) {
+	labels := n.GetLabels()
+	if val, ok := labels[key]; !ok || val != value {
+		labels[key] = value
+		n.updated = true
+	}
+}
+
 func (mu *mutator) Add(obj interface{}) {
-	node := obj.(*corev1.Node)
+	node := Node{obj.(*corev1.Node), false}
 	nodeName := node.GetName()
 	log := log.WithFields(log.Fields{"node": nodeName})
 
@@ -73,11 +98,11 @@ func (mu *mutator) Add(obj interface{}) {
 	// ProviderID
 	// EC2 - aws:///us-east-1c/i-0e190165ce4facc0f
 	// Fargate - aws:///us-east-1b/b7af340c11-9ec3eeb6643c4ea58b0285cefd83ef94/fargate-ip-10-65-48-87.ec2.internal
-	instanceID := filepath.Base(node.Spec.ProviderID)
-	if !strings.HasPrefix(instanceID, "aws:/") {
-		log.Debugln("Not an AWS Node... Skipping.")
+	if !strings.HasPrefix(node.Spec.ProviderID, "aws:/") {
+		log.Debug("Not an AWS Node... Skipping.")
 		return
 	}
+	instanceID := filepath.Base(node.Spec.ProviderID)
 	instanceAz := strings.Split(strings.TrimPrefix(node.Spec.ProviderID, "aws:///"), "/")[0]
 	var region string
 	if l := len(instanceAz); l > 0 {
@@ -91,7 +116,8 @@ func (mu *mutator) Add(obj interface{}) {
 
 	awsCfg, err := config.LoadDefaultConfig(context.Background(), config.WithRegion(region))
 	if err != nil {
-		log.Fatal(err)
+		log.Error(err)
+		return
 	}
 
 	ec2Client := ec2.NewFromConfig(awsCfg)
@@ -119,23 +145,14 @@ func (mu *mutator) Add(obj interface{}) {
 		lifecycle = "SPOT"
 	}
 
-	var modified bool
-	labels := node.GetLabels()
-	if val, ok := labels["eks.amazonaws.com/capacityType"]; !ok || val != lifecycle {
-		labels["eks.amazonaws.com/capacityType"] = lifecycle
-		modified = true
-	}
+	node.Label("eks.amazonaws.com/capacityType", lifecycle)
 
-	if modified {
-		n, err := mu.client.CoreV1().Nodes().Get(mu.ctx, nodeName, metav1.GetOptions{})
-		if err != nil {
-			log.Error(err.Error())
-			return
-		}
-		n.SetLabels(labels)
+	if node.updated {
+		n := obj.(*corev1.Node)
+		n.SetLabels(node.GetLabels())
 		_, err = mu.client.CoreV1().Nodes().Update(mu.ctx, n, metav1.UpdateOptions{})
 		if err != nil {
-			log.Error(err.Error())
+			log.Error(err)
 			return
 		}
 		log.Info("Modified labels")
