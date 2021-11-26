@@ -1,8 +1,16 @@
+// Encoding: UTF-8
+//
+// AWS Node Labeler
+//
+// Copyright © 2021 Brian Dwyer - Intelligent Digital Services
+//
+
 package main
 
 import (
 	"context"
 	"encoding/json"
+	"flag"
 	"fmt"
 	"io"
 	"os"
@@ -30,6 +38,18 @@ import (
 	"k8s.io/client-go/tools/clientcmd"
 )
 
+func init() {
+	log.SetFormatter(&log.JSONFormatter{})
+	// Debug Logging
+	if _, ok := os.LookupEnv("DEBUG"); ok {
+		log.SetLevel(log.DebugLevel)
+	}
+	if _, ok := os.LookupEnv("DEBUG_TRACE"); ok {
+		log.SetLevel(log.DebugLevel)
+		log.SetReportCaller(true)
+	}
+}
+
 type mutator struct {
 	client *kubernetes.Clientset
 	config Config
@@ -44,21 +64,15 @@ type Config struct {
 	} `yaml:"labels"`
 }
 
-func init() {
-	log.SetFormatter(&log.JSONFormatter{})
-	// Debug Logging
-	if _, ok := os.LookupEnv("DEBUG"); ok {
-		log.SetLevel(log.DebugLevel)
-	}
-	if _, ok := os.LookupEnv("DEBUG_TRACE"); ok {
-		log.SetLevel(log.DebugLevel)
-		log.SetReportCaller(true)
-	}
-}
-
 // https://firehydrant.io/blog/stay-informed-with-kubernetes-informers/
 
 func main() {
+	flag.Parse()
+
+	if versionFlag {
+		showVersion()
+		os.Exit(0)
+	}
 	var cfg Config
 	cfg.LabelPrefix = "aws.bdwyertech.net"
 	if val, ok := os.LookupEnv("CONFIG_FILE"); ok {
