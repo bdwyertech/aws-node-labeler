@@ -7,11 +7,13 @@ import (
 	"io"
 	"os"
 	"path/filepath"
+	"reflect"
 	"strings"
 
 	log "github.com/sirupsen/logrus"
 
 	"github.com/Jeffail/gabs/v2"
+	jsonpatch "github.com/evanphx/json-patch/v5"
 	"gopkg.in/yaml.v3"
 
 	"github.com/aws/aws-sdk-go-v2/config"
@@ -20,6 +22,7 @@ import (
 	// Kubernetes
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	k8stypes "k8s.io/apimachinery/pkg/types"
 	"k8s.io/apimachinery/pkg/util/runtime"
 	"k8s.io/client-go/informers"
 	"k8s.io/client-go/kubernetes"
@@ -105,8 +108,7 @@ func main() {
 
 type Node struct {
 	*corev1.Node
-	updated bool
-	log     *log.Entry
+	log *log.Entry
 }
 
 func (n *Node) Label(key, value string) {
@@ -114,7 +116,6 @@ func (n *Node) Label(key, value string) {
 	if val, ok := labels[key]; !ok || val != value {
 		n.log.Infof("Setting Label: %s=%s", key, value)
 		labels[key] = value
-		n.updated = true
 	}
 }
 
@@ -122,13 +123,19 @@ func (mu *mutator) Add(obj interface{}) {
 	nodeObj := obj.(*corev1.Node)
 	nodeName := nodeObj.GetName()
 	log := log.WithFields(log.Fields{"node": nodeName})
-	node := Node{nodeObj, false, log}
+	node := Node{nodeObj, log}
 
 	if val, ok := node.GetLabels()["eks.amazonaws.com/compute-type"]; ok {
 		if val == "fargate" {
 			log.Debugln("Skipping fargate node:", nodeName)
 			return
 		}
+	}
+
+	oldData, err := json.Marshal(nodeObj)
+	if err != nil {
+		log.Error(err)
+		return
 	}
 
 	// ProviderID
@@ -199,9 +206,19 @@ func (mu *mutator) Add(obj interface{}) {
 		}
 	}
 
-	if node.updated {
-		nodeObj.SetLabels(node.GetLabels())
-		_, err = mu.client.CoreV1().Nodes().Update(mu.ctx, nodeObj, metav1.UpdateOptions{})
+	newData, err := json.Marshal(nodeObj)
+	if err != nil {
+		log.Error(err)
+		return
+	}
+
+	if !reflect.DeepEqual(oldData, newData) {
+		patchBytes, err := jsonpatch.CreateMergePatch(oldData, newData)
+		if err != nil {
+			log.Error(err)
+			return
+		}
+		_, err = mu.client.CoreV1().Nodes().Patch(mu.ctx, nodeName, k8stypes.MergePatchType, patchBytes, metav1.PatchOptions{})
 		if err != nil {
 			log.Error(err)
 			return
