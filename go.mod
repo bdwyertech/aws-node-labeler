@@ -1,4 +1,4 @@
-module eks-lifecycle-labeler
+module aws-node-labeler
 
 go 1.16
 
