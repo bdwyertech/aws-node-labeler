@@ -14,6 +14,8 @@ labels:
     value: instance.ImageId
   - name: instance
     value: instance.InstanceId
+  - name: TeamName
+    value: MyCoolTeam
 ```
 
 #### Result
