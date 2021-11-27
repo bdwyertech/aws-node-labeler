@@ -217,6 +217,8 @@ func (mu *mutator) Add(obj interface{}) {
 			if val := instanceObj.Path(strings.TrimPrefix(v.Value, pfx)).Data(); val != nil {
 				node.Label(fmt.Sprintf("%s/%s", mu.config.LabelPrefix, v.Name), val.(string))
 			}
+		} else {
+			node.Label(fmt.Sprintf("%s/%s", mu.config.LabelPrefix, v.Name), v.Value)
 		}
 	}
 
