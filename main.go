@@ -16,6 +16,7 @@ import (
 	"os"
 	"path/filepath"
 	"reflect"
+	"regexp"
 	"strings"
 
 	log "github.com/sirupsen/logrus"
@@ -126,6 +127,13 @@ type Node struct {
 }
 
 func (n *Node) Label(key, value string) {
+	value = regexp.MustCompile("[^a-zA-Z0-9-_.]+").ReplaceAllString(value, "-")
+	matches := regexp.MustCompile(`(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])?`).FindAllString(value, -1)
+	for _, value = range matches {
+		if value != "" {
+			break
+		}
+	}
 	labels := n.GetLabels()
 	if val, ok := labels[key]; !ok || val != value {
 		n.log.Infof("Setting Label: %s=%s", key, value)
