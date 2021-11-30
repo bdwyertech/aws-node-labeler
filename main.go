@@ -59,11 +59,15 @@ type mutator struct {
 }
 
 type Config struct {
-	LabelPrefix string `yaml:"label_prefix"`
-	Labels      []struct {
-		Name  string `yaml:"name"`
-		Value string `yaml:"value"`
-	} `yaml:"labels"`
+	AnnotationPrefix string    `yaml:"annotation_prefix"`
+	Annotations      keyValues `yaml:"annotations"`
+	LabelPrefix      string    `yaml:"label_prefix"`
+	Labels           keyValues `yaml:"labels"`
+}
+
+type keyValues []struct {
+	Name  string `yaml:"name"`
+	Value string `yaml:"value"`
 }
 
 // https://firehydrant.io/blog/stay-informed-with-kubernetes-informers/
@@ -76,7 +80,7 @@ func main() {
 		os.Exit(0)
 	}
 	var cfg Config
-	cfg.LabelPrefix = "aws.bdwyertech.net"
+	cfg.AnnotationPrefix, cfg.LabelPrefix = "aws.bdwyertech.net", "aws.bdwyertech.net"
 	if val, ok := os.LookupEnv("CONFIG_FILE"); ok {
 		cfgFile, err := os.Open(val)
 		if err != nil {
@@ -139,6 +143,14 @@ func (n *Node) Label(key, value string) {
 	if val, ok := labels[key]; !ok || val != value {
 		n.log.Infof("Setting Label: %s=%s", key, value)
 		labels[key] = value
+	}
+}
+
+func (n *Node) Annotate(key, value string) {
+	annotations := n.GetAnnotations()
+	if val, ok := annotations[key]; !ok || val != value {
+		n.log.Infof("Setting Annotation: %s=%s", key, value)
+		annotations[key] = value
 	}
 }
 
@@ -247,24 +259,28 @@ func (mu *mutator) Add(obj interface{}) {
 		return spotObj
 	}
 
-	for _, v := range mu.config.Labels {
-		if pfx := "instance.spot."; strings.HasPrefix(v.Value, pfx) {
-			if instance.SpotInstanceRequestId == nil {
-				continue
-			}
-			if spotObj := getSpot(); spotObj != nil {
-				if val := spotObj.Path(strings.TrimPrefix(v.Value, pfx)).Data(); val != nil {
-					node.Label(fmt.Sprintf("%s/%s", mu.config.LabelPrefix, v.Name), val.(string))
+	apply := func(applyFunc func(string, string), kv keyValues, prefix string) {
+		for _, v := range kv {
+			if pfx := "instance.spot."; strings.HasPrefix(v.Value, pfx) {
+				if instance.SpotInstanceRequestId == nil {
+					continue
 				}
+				if spotObj := getSpot(); spotObj != nil {
+					if val := spotObj.Path(strings.TrimPrefix(v.Value, pfx)).Data(); val != nil {
+						applyFunc(fmt.Sprintf("%s/%s", prefix, v.Name), val.(string))
+					}
+				}
+			} else if pfx := "instance."; strings.HasPrefix(v.Value, pfx) {
+				if val := instanceObj.Path(strings.TrimPrefix(v.Value, pfx)).Data(); val != nil {
+					applyFunc(fmt.Sprintf("%s/%s", prefix, v.Name), val.(string))
+				}
+			} else {
+				applyFunc(fmt.Sprintf("%s/%s", prefix, v.Name), v.Value)
 			}
-		} else if pfx := "instance."; strings.HasPrefix(v.Value, pfx) {
-			if val := instanceObj.Path(strings.TrimPrefix(v.Value, pfx)).Data(); val != nil {
-				node.Label(fmt.Sprintf("%s/%s", mu.config.LabelPrefix, v.Name), val.(string))
-			}
-		} else {
-			node.Label(fmt.Sprintf("%s/%s", mu.config.LabelPrefix, v.Name), v.Value)
 		}
 	}
+	apply(node.Annotate, mu.config.Annotations, mu.config.AnnotationPrefix)
+	apply(node.Label, mu.config.Labels, mu.config.LabelPrefix)
 
 	newData, err := json.Marshal(nodeObj)
 	if err != nil {
