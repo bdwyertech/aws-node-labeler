@@ -1,12 +1,14 @@
-label_prefix: aws.myorg.net
+annotations:
+  - name: Owner
+    value: bdwyertech@github.com
 labels:
-  - name: zone
+  - name: aws.bdwyertech.net/zone
     value: instance.Placement.AvailabilityZone
-  - name: image
+  - name: aws.bdwyertech.net/image
     value: instance.ImageId
-  - name: instance
+  - name: aws.bdwyertech.net/instance
     value: instance.InstanceId
-  - name: networkInterface
+  - name: aws.bdwyertech.net/networkInterface
     value: instance.NetworkInterfaces.0.NetworkInterfaceId
-  - name: SpotPrice
+  - name: aws.bdwyertech.net/SpotPrice
     value: instance.spot.SpotPrice

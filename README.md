@@ -6,27 +6,29 @@ You can optionally configure this to add other attributes to the tag of your cho
 
 ### Example
 ```yaml
-label_prefix: bdwyertech.net
-labels:
-  - name: zone
-    value: instance.Placement.AvailabilityZone
-  - name: image
-    value: instance.ImageId
-  - name: instance
-    value: instance.InstanceId
-  - name: spotPrice
-    value: instance.spot.SpotPrice
+annotations:
   - name: TeamName
     value: MyCoolTeam
+labels:
+  - name: aws.bdwyertech.net/zone
+    value: instance.Placement.AvailabilityZone
+  - name: aws.bdwyertech.net/image
+    value: instance.ImageId
+  - name: aws.bdwyertech.net/instance
+    value: instance.InstanceId
+  - name: aws.bdwyertech.net/spotPrice
+    value: instance.spot.SpotPrice
 ```
 
 #### Result
 ```
-bdwyertech.net/zone=us-east-1a
-bdwyertech.net/image=ami-123456789a9876543
-bdwyertech.net/instance=i-abcdef123a456789a
-bdwyertech.net/spotPrice=0.768000
-bdwyertech.net/TeamName=MyCoolTeam
+# Annotations
+TeamName=MyCoolTeam
+# Labels
+aws.bdwyertech.net/zone=us-east-1a
+aws.bdwyertech.net/image=ami-123456789a9876543
+aws.bdwyertech.net/instance=i-abcdef123a456789a
+aws.bdwyertech.net/spotPrice=0.768000
 ```
 
 Any/all fields in `DescribeInstances` output are available.

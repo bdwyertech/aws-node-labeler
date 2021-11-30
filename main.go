@@ -59,10 +59,8 @@ type mutator struct {
 }
 
 type Config struct {
-	AnnotationPrefix string    `yaml:"annotation_prefix"`
-	Annotations      keyValues `yaml:"annotations"`
-	LabelPrefix      string    `yaml:"label_prefix"`
-	Labels           keyValues `yaml:"labels"`
+	Annotations keyValues `yaml:"annotations"`
+	Labels      keyValues `yaml:"labels"`
 }
 
 type keyValues []struct {
@@ -80,7 +78,6 @@ func main() {
 		os.Exit(0)
 	}
 	var cfg Config
-	cfg.AnnotationPrefix, cfg.LabelPrefix = "aws.bdwyertech.net", "aws.bdwyertech.net"
 	if val, ok := os.LookupEnv("CONFIG_FILE"); ok {
 		cfgFile, err := os.Open(val)
 		if err != nil {
@@ -131,6 +128,14 @@ type Node struct {
 	log *log.Entry
 }
 
+func (n *Node) Annotate(key, value string) {
+	annotations := n.GetAnnotations()
+	if val, ok := annotations[key]; !ok || val != value {
+		n.log.Infof("Setting Annotation: %s=%s", key, value)
+		annotations[key] = value
+	}
+}
+
 func (n *Node) Label(key, value string) {
 	value = regexp.MustCompile("[^a-zA-Z0-9-_.]+").ReplaceAllString(value, "-")
 	matches := regexp.MustCompile(`(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])?`).FindAllString(value, -1)
@@ -143,14 +148,6 @@ func (n *Node) Label(key, value string) {
 	if val, ok := labels[key]; !ok || val != value {
 		n.log.Infof("Setting Label: %s=%s", key, value)
 		labels[key] = value
-	}
-}
-
-func (n *Node) Annotate(key, value string) {
-	annotations := n.GetAnnotations()
-	if val, ok := annotations[key]; !ok || val != value {
-		n.log.Infof("Setting Annotation: %s=%s", key, value)
-		annotations[key] = value
 	}
 }
 
@@ -259,7 +256,7 @@ func (mu *mutator) Add(obj interface{}) {
 		return spotObj
 	}
 
-	apply := func(applyFunc func(string, string), kv keyValues, prefix string) {
+	apply := func(applyFunc func(string, string), kv keyValues) {
 		for _, v := range kv {
 			if pfx := "instance.spot."; strings.HasPrefix(v.Value, pfx) {
 				if instance.SpotInstanceRequestId == nil {
@@ -267,20 +264,20 @@ func (mu *mutator) Add(obj interface{}) {
 				}
 				if spotObj := getSpot(); spotObj != nil {
 					if val := spotObj.Path(strings.TrimPrefix(v.Value, pfx)).Data(); val != nil {
-						applyFunc(fmt.Sprintf("%s/%s", prefix, v.Name), val.(string))
+						applyFunc(v.Name, val.(string))
 					}
 				}
 			} else if pfx := "instance."; strings.HasPrefix(v.Value, pfx) {
 				if val := instanceObj.Path(strings.TrimPrefix(v.Value, pfx)).Data(); val != nil {
-					applyFunc(fmt.Sprintf("%s/%s", prefix, v.Name), val.(string))
+					applyFunc(v.Name, val.(string))
 				}
 			} else {
-				applyFunc(fmt.Sprintf("%s/%s", prefix, v.Name), v.Value)
+				applyFunc(v.Name, v.Value)
 			}
 		}
 	}
-	apply(node.Annotate, mu.config.Annotations, mu.config.AnnotationPrefix)
-	apply(node.Label, mu.config.Labels, mu.config.LabelPrefix)
+	apply(node.Annotate, mu.config.Annotations)
+	apply(node.Label, mu.config.Labels)
 
 	newData, err := json.Marshal(nodeObj)
 	if err != nil {
