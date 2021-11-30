@@ -18,6 +18,7 @@ import (
 	"reflect"
 	"regexp"
 	"strings"
+	"sync"
 
 	log "github.com/sirupsen/logrus"
 
@@ -220,8 +221,43 @@ func (mu *mutator) Add(obj interface{}) {
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	var spotOnce sync.Once
+	var spotObj *gabs.Container
+	getSpot := func() *gabs.Container {
+		spotOnce.Do(func() {
+			// Get Spot Instance Details
+			if reservations, err := ec2Client.DescribeSpotInstanceRequests(mu.ctx, &ec2.DescribeSpotInstanceRequestsInput{
+				SpotInstanceRequestIds: []string{*instance.SpotInstanceRequestId},
+			}); err != nil {
+				log.Error(err)
+				return
+			} else if len(reservations.SpotInstanceRequests) == 1 {
+				jsonBytes, err := json.Marshal(reservations.SpotInstanceRequests[0])
+				if err != nil {
+					log.Error(err)
+					return
+				}
+				spotObj, err = gabs.ParseJSON(jsonBytes)
+				if err != nil {
+					log.Error(err)
+				}
+			}
+		})
+		return spotObj
+	}
+
 	for _, v := range mu.config.Labels {
-		if pfx := "instance."; strings.HasPrefix(v.Value, pfx) {
+		if pfx := "instance.spot."; strings.HasPrefix(v.Value, pfx) {
+			if instance.SpotInstanceRequestId == nil {
+				continue
+			}
+			if spotObj := getSpot(); spotObj != nil {
+				if val := spotObj.Path(strings.TrimPrefix(v.Value, pfx)).Data(); val != nil {
+					node.Label(fmt.Sprintf("%s/%s", mu.config.LabelPrefix, v.Name), val.(string))
+				}
+			}
+		} else if pfx := "instance."; strings.HasPrefix(v.Value, pfx) {
 			if val := instanceObj.Path(strings.TrimPrefix(v.Value, pfx)).Data(); val != nil {
 				node.Label(fmt.Sprintf("%s/%s", mu.config.LabelPrefix, v.Name), val.(string))
 			}

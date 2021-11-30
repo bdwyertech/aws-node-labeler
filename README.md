@@ -14,6 +14,8 @@ labels:
     value: instance.ImageId
   - name: instance
     value: instance.InstanceId
+  - name: spotPrice
+    value: instance.spot.SpotPrice
   - name: TeamName
     value: MyCoolTeam
 ```
@@ -23,15 +25,20 @@ labels:
 bdwyertech.net/zone=us-east-1a
 bdwyertech.net/image=ami-123456789a9876543
 bdwyertech.net/instance=i-abcdef123a456789a
+bdwyertech.net/spotPrice=0.768000
+bdwyertech.net/TeamName=MyCoolTeam
 ```
 
-Any/all fields in DescribeInstances output are available.
+Any/all fields in `DescribeInstances` output are available.
 
 https://pkg.go.dev/github.com/aws/aws-sdk-go-v2/service/ec2/types#Instance
 
+For spot instances, you can use the prefix `instance.spot` to access fields available in `SpotInstanceRequest`.  If an instance is not a spot instance or the field is not available, it will not be set at all.
+https://pkg.go.dev/github.com/aws/aws-sdk-go-v2/service/ec2/types#SpotInstanceRequest
+
 
 #### AWS Permissions
-This application requires `ec2:DescribeInstances`
+This application requires `ec2:DescribeInstances` and optionally `ec2:DescribeSpotInstanceRequests`
 
 #### Kubernetes Permissions
 This application requires a ClusterRole similar to the below:

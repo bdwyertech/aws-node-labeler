@@ -8,3 +8,5 @@ labels:
     value: instance.InstanceId
   - name: networkInterface
     value: instance.NetworkInterfaces.0.NetworkInterfaceId
+  - name: SpotPrice
+    value: instance.spot.SpotPrice

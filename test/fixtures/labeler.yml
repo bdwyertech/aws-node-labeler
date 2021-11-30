@@ -94,3 +94,5 @@ data:
         value: instance.InstanceId
       - name: networkInterface
         value: instance.NetworkInterfaces.0.NetworkInterfaceId
+      - name: spotPrice
+        value: instance.spot.SpotPrice
