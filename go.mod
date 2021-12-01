@@ -4,7 +4,7 @@ go 1.16
 
 require (
 	github.com/Jeffail/gabs/v2 v2.6.1
-	github.com/aws/aws-sdk-go-v2/config v1.10.2
+	github.com/aws/aws-sdk-go-v2/config v1.10.3
 	github.com/aws/aws-sdk-go-v2/service/ec2 v1.23.0
 	github.com/evanphx/json-patch/v5 v5.6.0
 	github.com/sirupsen/logrus v1.8.1
