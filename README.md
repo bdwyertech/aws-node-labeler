@@ -38,9 +38,16 @@ https://pkg.go.dev/github.com/aws/aws-sdk-go-v2/service/ec2/types#Instance
 For spot instances, you can use the prefix `instance.spot` to access fields available in `SpotInstanceRequest`.  If an instance is not a spot instance or the field is not available, it will not be set at all.
 https://pkg.go.dev/github.com/aws/aws-sdk-go-v2/service/ec2/types#SpotInstanceRequest
 
+A special function, `instance.pod-eni-capable` is available which will set the desired label/annotation to `true` if the instance type is capable of Pod ENI.
+https://docs.aws.amazon.com/eks/latest/userguide/security-groups-for-pods.html#supported-instance-types
 
 #### AWS Permissions
-This application requires `ec2:DescribeInstances` and optionally `ec2:DescribeSpotInstanceRequests`
+##### Required: 
+* `ec2:DescribeInstances`
+
+##### Optional:
+* `ec2:DescribeInstanceTypes`
+* `ec2:DescribeSpotInstanceRequests`
 
 #### Kubernetes Permissions
 This application requires a ClusterRole similar to the below:
