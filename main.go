@@ -26,12 +26,12 @@ import (
 	jsonpatch "github.com/evanphx/json-patch/v5"
 	"gopkg.in/yaml.v3"
 
-	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/config"
 	"github.com/aws/aws-sdk-go-v2/service/ec2"
 	ec2Types "github.com/aws/aws-sdk-go-v2/service/ec2/types"
 
 	// Kubernetes
+	"github.com/aws/amazon-vpc-resource-controller-k8s/pkg/aws/vpc"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	k8stypes "k8s.io/apimachinery/pkg/types"
@@ -261,9 +261,12 @@ func (mu *mutator) Add(obj interface{}) {
 	apply := func(applyFunc func(string, string), kv keyValues) {
 		for _, v := range kv {
 			if v.Value == "instance.pod-eni-capable" {
-				if supported, err := supportsPodEni(mu.ctx, ec2Client, instance); err != nil {
-					log.Error(err)
-				} else if supported {
+				// Pod ENI is supported by many different instance types
+				// https://docs.aws.amazon.com/eks/latest/userguide/security-groups-for-pods.html#supported-instance-types
+				// VPC Resource Controller - IsInstanceSupported
+				// https://github.com/aws/amazon-vpc-resource-controller-k8s/blob/05e89ff9300a5cc0ebea705834cf27f0a7f3b509/pkg/provider/branch/provider.go#L463-L472
+				limits, found := vpc.Limits[string(instance.InstanceType)]
+				if found && instance.Platform != ec2Types.PlatformValuesWindows && limits.IsTrunkingCompatible {
 					applyFunc(v.Name, "true")
 				}
 			} else if pfx := "instance.spot."; strings.HasPrefix(v.Value, pfx) {
@@ -306,30 +309,4 @@ func (mu *mutator) Add(obj interface{}) {
 		}
 		log.Info("Updated Node")
 	}
-}
-
-var podEniSupported map[string]bool
-
-// Pod ENI is supported by Bare Metal & all Nitro except T types
-// https://docs.aws.amazon.com/eks/latest/userguide/security-groups-for-pods.html#supported-instance-types
-func supportsPodEni(ctx context.Context, client *ec2.Client, instance ec2Types.Instance) (supported bool, err error) {
-	if podEniSupported == nil {
-		podEniSupported = make(map[string]bool)
-	} else if val, ok := podEniSupported[string(instance.InstanceType)]; ok {
-		supported = val
-		return
-	}
-	out, err := client.DescribeInstanceTypes(ctx, &ec2.DescribeInstanceTypesInput{
-		InstanceTypes: []ec2Types.InstanceType{instance.InstanceType},
-	})
-	if err != nil {
-		return
-	}
-	instanceType := out.InstanceTypes[0]
-
-	if aws.ToBool(instanceType.BareMetal) || (instanceType.Hypervisor == "nitro" && !strings.HasPrefix(string(instanceType.InstanceType), "t")) {
-		supported = true
-	}
-	podEniSupported[string(instance.InstanceType)] = supported
-	return
 }

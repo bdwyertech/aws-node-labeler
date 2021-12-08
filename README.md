@@ -46,7 +46,6 @@ https://docs.aws.amazon.com/eks/latest/userguide/security-groups-for-pods.html#s
 * `ec2:DescribeInstances`
 
 ##### Optional:
-* `ec2:DescribeInstanceTypes`
 * `ec2:DescribeSpotInstanceRequests`
 
 #### Kubernetes Permissions
