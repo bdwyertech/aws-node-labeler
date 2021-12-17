@@ -61,11 +61,15 @@ type mutator struct {
 }
 
 type Config struct {
-	Annotations keyValues `yaml:"annotations"`
-	Labels      keyValues `yaml:"labels"`
+	Annotations []keyValue `yaml:"annotations"`
+	Labels      []keyValue `yaml:"labels"`
+	EniConfig   *struct {
+		Label       string `yaml:"label"`
+		SuffixLabel string `yaml:"suffix_label"`
+	} `yaml:"eni_config"`
 }
 
-type keyValues []struct {
+type keyValue struct {
 	Name  string `yaml:"name"`
 	Value string `yaml:"value"`
 }
@@ -224,6 +228,12 @@ func (mu *mutator) Add(obj interface{}) {
 
 	node.Label("eks.amazonaws.com/capacityType", lifecycle)
 
+	if eniConfig := mu.config.EniConfig; eniConfig != nil {
+		if val, ok := node.GetLabels()[eniConfig.SuffixLabel]; ok {
+			node.Label(eniConfig.Label, fmt.Sprintf("%s-%s", *instance.Placement.AvailabilityZone, val))
+		}
+	}
+
 	jsonBytes, err := json.Marshal(instance)
 	if err != nil {
 		log.Fatal(err)
@@ -258,7 +268,7 @@ func (mu *mutator) Add(obj interface{}) {
 		return spotObj
 	}
 
-	apply := func(applyFunc func(string, string), kv keyValues) {
+	apply := func(applyFunc func(string, string), kv []keyValue) {
 		for _, v := range kv {
 			if v.Value == "instance.pod-eni-capable" {
 				// Pod ENI is supported by many different instance types

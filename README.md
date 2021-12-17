@@ -4,6 +4,8 @@ This application is intended to label Kubernetes nodes with AWS metadata.  By de
 
 You can optionally configure this to add other attributes to the tag of your choice.
 
+Additionally, this supports appending a suffix to CNI ENI Configuration.  The `aws-vpc-cni` Helm chart [provisions configs per availability zone.(https://github.com/aws/amazon-vpc-cni-k8s/blob/2af69b263885e94e4eeae309b07807b3714c0381/charts/aws-vpc-cni/templates/eniconfig.yaml#L6)  If you have more than one subnet you wish to expose, you can use this feature to dynamically set the correct ENI config.
+
 ### Example
 ```yaml
 annotations:
@@ -18,6 +20,10 @@ labels:
     value: instance.InstanceId
   - name: aws.bdwyertech.net/spotPrice
     value: instance.spot.SpotPrice
+
+eni_config:
+  label: vpc.amazonaws.com/eniConfig
+  suffix_label: aws.bdwyertech.net/eniConfigSuffix
 ```
 
 #### Result
@@ -29,6 +35,9 @@ aws.bdwyertech.net/zone=us-east-1a
 aws.bdwyertech.net/image=ami-123456789a9876543
 aws.bdwyertech.net/instance=i-abcdef123a456789a
 aws.bdwyertech.net/spotPrice=0.768000
+
+# Custom ENI Config (aws.bdwyertech.net/eniConfigSuffix=securedSubnet)
+vpc.amazonaws.com/eniConfig=us-east-1c-securedSubnet
 ```
 
 Any/all fields in `DescribeInstances` output are available.

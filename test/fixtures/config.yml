@@ -12,3 +12,7 @@ labels:
     value: instance.NetworkInterfaces.0.NetworkInterfaceId
   - name: aws.bdwyertech.net/SpotPrice
     value: instance.spot.SpotPrice
+
+eni_config:
+  label: vpc.amazonaws.com/eniConfig
+  suffix_label: aws.bdwyertech.net/eniConfigSuffix
