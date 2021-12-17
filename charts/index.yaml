@@ -1,0 +1,14 @@
+apiVersion: v1
+entries:
+  aws-node-labeler:
+  - apiVersion: v2
+    appVersion: latest
+    created: "2021-12-17T14:29:10.645615-05:00"
+    description: A Helm chart for https://github.com/bdwyertech/aws-node-labeler
+    digest: 52f4224b8c178ac300c8b2e2e4306aa0bf8fd39f76a16902c7ccb69f9fd89cb3
+    name: aws-node-labeler
+    type: application
+    urls:
+    - aws-node-labeler-0.1.0.tgz
+    version: 0.1.0
+generated: "2021-12-17T14:29:10.642245-05:00"

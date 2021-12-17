@@ -1,0 +1,70 @@
+# Default values for aws-node-labeler.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 1
+
+image:
+  repository: bdwyertech/eks-lifecycle-labeler
+  pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: ''
+
+imagePullSecrets: []
+nameOverride: ''
+fullnameOverride: ''
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ''
+
+podAnnotations: {}
+
+podSecurityContext:
+  {}
+  # fsGroup: 2000
+
+securityContext:
+  {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+resources:
+  limits:
+    cpu: '0.5'
+    memory: 64Mi
+  requests:
+    cpu: '0.1'
+    memory: 16Mi
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+labelerConfigMap: labeler-config
+labelerConfig:
+  annotations:
+    - name: Owner
+      value: bdwyertech@github.com
+  labels:
+    - name: aws.bdwyertech.net/zone
+      value: instance.Placement.AvailabilityZone
+    - name: aws.bdwyertech.net/image
+      value: instance.ImageId
+    - name: aws.bdwyertech.net/instance
+      value: instance.InstanceId
+    - name: aws.bdwyertech.net/networkInterface
+      value: instance.NetworkInterfaces.0.NetworkInterfaceId
+    - name: aws.bdwyertech.net/spotPrice
+      value: instance.spot.SpotPrice
