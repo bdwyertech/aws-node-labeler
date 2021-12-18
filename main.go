@@ -64,7 +64,7 @@ type Config struct {
 	Annotations []keyValue `yaml:"annotations"`
 	Labels      []keyValue `yaml:"labels"`
 	EniConfig   *struct {
-		Label       string `yaml:"label"`
+		Annotation  string `yaml:"annotation"`
 		SuffixLabel string `yaml:"suffix_label"`
 	} `yaml:"eni_config"`
 }
@@ -230,7 +230,7 @@ func (mu *mutator) Add(obj interface{}) {
 
 	if eniConfig := mu.config.EniConfig; eniConfig != nil {
 		if val, ok := node.GetLabels()[eniConfig.SuffixLabel]; ok {
-			node.Label(eniConfig.Label, fmt.Sprintf("%s-%s", *instance.Placement.AvailabilityZone, val))
+			node.Annotate(eniConfig.Annotation, fmt.Sprintf("%s-%s", *instance.Placement.AvailabilityZone, val))
 		}
 	}
 
