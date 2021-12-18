@@ -18,13 +18,13 @@ spec:
     spec:
       containers:
         - name: labeler
-          image: "bdwyertech/eks-lifecycle-labeler:latest"
+          image: 'bdwyertech/aws-node-labeler:latest'
           resources:
             limits:
-              cpu: "0.5"
+              cpu: '0.5'
               memory: 64Mi
             requests:
-              cpu: "0.1"
+              cpu: '0.1'
               memory: 16Mi
           volumeMounts:
             - name: config-volume
@@ -60,7 +60,7 @@ rules:
       - watch
       - patch
     apiGroups:
-      - ""
+      - ''
     resources:
       - nodes
 ---

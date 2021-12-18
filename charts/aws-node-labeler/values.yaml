@@ -5,7 +5,7 @@
 replicaCount: 1
 
 image:
-  repository: bdwyertech/eks-lifecycle-labeler
+  repository: bdwyertech/aws-node-labeler
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
   tag: ''
@@ -54,17 +54,18 @@ affinity: {}
 
 labelerConfigMap: labeler-config
 labelerConfig:
-  annotations:
-    - name: Owner
-      value: bdwyertech@github.com
-  labels:
-    - name: aws.bdwyertech.net/zone
-      value: instance.Placement.AvailabilityZone
-    - name: aws.bdwyertech.net/image
-      value: instance.ImageId
-    - name: aws.bdwyertech.net/instance
-      value: instance.InstanceId
-    - name: aws.bdwyertech.net/networkInterface
-      value: instance.NetworkInterfaces.0.NetworkInterfaceId
-    - name: aws.bdwyertech.net/spotPrice
-      value: instance.spot.SpotPrice
+  {}
+  # annotations:
+  #   - name: Owner
+  #     value: bdwyertech@github.com
+  # labels:
+  #   - name: aws.bdwyertech.net/zone
+  #     value: instance.Placement.AvailabilityZone
+  #   - name: aws.bdwyertech.net/image
+  #     value: instance.ImageId
+  #   - name: aws.bdwyertech.net/instance
+  #     value: instance.InstanceId
+  #   - name: aws.bdwyertech.net/networkInterface
+  #     value: instance.NetworkInterfaces.0.NetworkInterfaceId
+  #   - name: aws.bdwyertech.net/spotPrice
+  #     value: instance.spot.SpotPrice
