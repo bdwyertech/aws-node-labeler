@@ -22,7 +22,7 @@ labels:
     value: instance.spot.SpotPrice
 
 eni_config:
-  label: vpc.amazonaws.com/eniConfig
+  annotation: k8s.amazonaws.com/eniConfig
   suffix_label: aws.bdwyertech.net/eniConfigSuffix
 ```
 
