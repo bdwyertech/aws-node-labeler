@@ -2,7 +2,7 @@
 
 This application is intended to label Kubernetes nodes with AWS metadata.  By default, this will ensure the label `eks.amazonaws.com/capacityType` is correctly set to `SPOT` or `ON_DEMAND` depending on its `InstanceLifecycle` status. Typically you would set this via a curl in userdata, but AWS Bottlerocket TOML does not support doing this dynamically yet.  This can be a problem if you have an ASG with a mix of spot and on-demand instances.
 
-You can optionally configure this to add other attributes to the tag of your choice.
+You can optionally configure this to add other attributes to the annotation or label of your choice.
 
 Additionally, this supports appending a suffix to CNI ENI Configuration.  The `aws-vpc-cni` Helm chart [provisions configs per availability zone.](https://github.com/aws/amazon-vpc-cni-k8s/blob/2af69b263885e94e4eeae309b07807b3714c0381/charts/aws-vpc-cni/templates/eniconfig.yaml#L6)  If you have more than one subnet you wish to expose, you can use this feature to dynamically set the correct ENI config.
 
