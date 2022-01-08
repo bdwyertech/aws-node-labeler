@@ -136,6 +136,9 @@ type Node struct {
 
 func (n *Node) Annotate(key, value string) {
 	annotations := n.GetAnnotations()
+	if annotations == nil {
+		annotations = make(map[string]string)
+	}
 	if val, ok := annotations[key]; !ok || val != value {
 		n.log.Infof("Setting Annotation: %s=%s", key, value)
 		annotations[key] = value
@@ -151,6 +154,9 @@ func (n *Node) Label(key, value string) {
 		}
 	}
 	labels := n.GetLabels()
+	if labels == nil {
+		labels = make(map[string]string)
+	}
 	if val, ok := labels[key]; !ok || val != value {
 		n.log.Infof("Setting Label: %s=%s", key, value)
 		labels[key] = value
