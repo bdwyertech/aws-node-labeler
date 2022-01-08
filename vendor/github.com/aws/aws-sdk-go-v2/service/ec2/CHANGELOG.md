@@ -1,3 +1,15 @@
+# v1.27.0 (2022-01-07)
+
+* **Feature**: API client updated
+* **Feature**: Updated `github.com/aws/smithy-go` to latest version
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.26.0 (2021-12-21)
+
+* **Feature**: API Paginators now support specifying the initial starting token, and support stopping on empty string tokens.
+* **Feature**: API client updated
+* **Feature**: Updated to latest service endpoints
+
 # v1.25.0 (2021-12-02)
 
 * **Feature**: API client updated
