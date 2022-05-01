@@ -1,3 +1,67 @@
+# v1.37.0 (2022-04-28)
+
+* **Feature**: This release adds support to query the public key and creation date of EC2 Key Pairs. Additionally, the format (pem or ppk) of a key pair can be specified when creating a new key pair.
+
+# v1.36.1 (2022-04-25)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.36.0 (2022-04-22)
+
+* **Feature**: Adds support for waiters that automatically poll for a deleted NAT Gateway until it reaches the deleted state.
+
+# v1.35.1 (2022-04-14)
+
+* **Documentation**: Documentation updates for Amazon EC2.
+
+# v1.35.0 (2022-04-12)
+
+* **Feature**: X2idn and X2iedn instances are powered by 3rd generation Intel Xeon Scalable processors with an all-core turbo frequency up to 3.5 GHzAmazon EC2. C6a instances are powered by 3rd generation AMD EPYC processors.
+
+# v1.34.0 (2022-03-30)
+
+* **Feature**: This release simplifies the auto-recovery configuration process enabling customers to set the recovery behavior to disabled or default
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.33.0 (2022-03-25)
+
+* **Feature**: This is release adds support for Amazon VPC Reachability Analyzer to analyze path through a Transit Gateway.
+
+# v1.32.2 (2022-03-24)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.32.1 (2022-03-23)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.32.0 (2022-03-15)
+
+* **Feature**: Adds the Cascade parameter to the DeleteIpam API. Customers can use this parameter to automatically delete their IPAM, including non-default scopes, pools, cidrs, and allocations. There mustn't be any pools provisioned in the default public scope to use this parameter.
+
+# v1.31.0 (2022-03-08)
+
+* **Feature**: Updated `github.com/aws/smithy-go` to latest version
+* **Feature**: Updated service client model to latest release.
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.30.0 (2022-02-24)
+
+* **Feature**: API client updated
+* **Feature**: Adds RetryMaxAttempts and RetryMod to API client Options. This allows the API clients' default Retryer to be configured from the shared configuration files or environment variables. Adding a new Retry mode of `Adaptive`. `Adaptive` retry mode is an experimental mode, adding client rate limiting when throttles reponses are received from an API. See [retry.AdaptiveMode](https://pkg.go.dev/github.com/aws/aws-sdk-go-v2/aws/retry#AdaptiveMode) for more details, and configuration options.
+* **Feature**: Updated `github.com/aws/smithy-go` to latest version
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.29.0 (2022-01-28)
+
+* **Feature**: Updated to latest API model.
+
+# v1.28.0 (2022-01-14)
+
+* **Feature**: Updated API models
+* **Feature**: Updated `github.com/aws/smithy-go` to latest version
+* **Dependency Update**: Updated to the latest SDK module versions
+
 # v1.27.0 (2022-01-07)
 
 * **Feature**: API client updated
