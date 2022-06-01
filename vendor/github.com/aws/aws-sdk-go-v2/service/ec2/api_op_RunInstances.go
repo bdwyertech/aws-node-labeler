@@ -149,6 +149,11 @@ type RunInstancesInput struct {
 	// supported.
 	CreditSpecification *types.CreditSpecificationRequest
 
+	// Indicates whether an instance is enabled for stop protection. For more
+	// information, see Stop Protection
+	// (https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/Stop_Start.html#Using_StopProtection).
+	DisableApiStop *bool
+
 	// If you set this parameter to true, you can't terminate the instance using the
 	// Amazon EC2 console, CLI, or API; otherwise, you can. To change this attribute
 	// after launch, use ModifyInstanceAttribute
@@ -258,6 +263,9 @@ type RunInstancesInput struct {
 	// The license configurations.
 	LicenseSpecifications []types.LicenseConfigurationRequest
 
+	// The maintenance and recovery options for the instance.
+	MaintenanceOptions *types.InstanceMaintenanceOptionsRequest
+
 	// The metadata options for the instance. For more information, see Instance
 	// metadata and user data
 	// (https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-instance-metadata.html).
@@ -321,8 +329,8 @@ type RunInstancesInput struct {
 	// (https://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_CreateTags.html).
 	TagSpecifications []types.TagSpecification
 
-	// The user data to make available to the instance. For more information, see Run
-	// commands on your Linux instance at launch
+	// The user data script to make available to the instance. For more information,
+	// see Run commands on your Linux instance at launch
 	// (https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/user-data.html) and Run
 	// commands on your Windows instance at launch
 	// (https://docs.aws.amazon.com/AWSEC2/latest/WindowsGuide/ec2-windows-user-data.html).
