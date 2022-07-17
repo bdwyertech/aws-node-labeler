@@ -115,8 +115,7 @@ type CreateCapacityReservationInput struct {
 	// the EndDateType value is limited.
 	EndDateType types.EndDateType
 
-	// Indicates whether the Capacity Reservation supports instances with temporary,
-	// block-level storage.
+	// Deprecated.
 	EphemeralStorage *bool
 
 	// Indicates the type of instance launches that the Capacity Reservation accepts.
@@ -139,6 +138,13 @@ type CreateCapacityReservationInput struct {
 	// The Amazon Resource Name (ARN) of the Outpost on which to create the Capacity
 	// Reservation.
 	OutpostArn *string
+
+	// The Amazon Resource Name (ARN) of the cluster placement group in which to create
+	// the Capacity Reservation. For more information, see  Capacity Reservations for
+	// cluster placement groups
+	// (https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/cr-cpg.html) in the Amazon
+	// EC2 User Guide.
+	PlacementGroupArn *string
 
 	// The tags to apply to the Capacity Reservation during launch.
 	TagSpecifications []types.TagSpecification

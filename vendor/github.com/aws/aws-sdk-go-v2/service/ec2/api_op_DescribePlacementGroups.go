@@ -42,22 +42,27 @@ type DescribePlacementGroupsInput struct {
 	//
 	// * group-name - The name of the placement group.
 	//
-	// * state - The
-	// state of the placement group (pending | available | deleting | deleted).
+	// * group-arn - The
+	// Amazon Resource Name (ARN) of the placement group.
 	//
-	// *
-	// strategy - The strategy of the placement group (cluster | spread |
-	// partition).
+	// * spread-level - The spread
+	// level for the placement group (host | rack).
 	//
-	// * tag: - The key/value combination of a tag assigned to the
-	// resource. Use the tag key in the filter name and the tag value as the filter
-	// value. For example, to find all resources that have a tag with the key Owner and
-	// the value TeamA, specify tag:Owner for the filter name and TeamA for the filter
-	// value.
+	// * state - The state of the
+	// placement group (pending | available | deleting | deleted).
 	//
-	// * tag-key - The key of a tag assigned to the resource. Use this filter
-	// to find all resources that have a tag with a specific key, regardless of the tag
-	// value.
+	// * strategy - The
+	// strategy of the placement group (cluster | spread | partition).
+	//
+	// * tag: - The
+	// key/value combination of a tag assigned to the resource. Use the tag key in the
+	// filter name and the tag value as the filter value. For example, to find all
+	// resources that have a tag with the key Owner and the value TeamA, specify
+	// tag:Owner for the filter name and TeamA for the filter value.
+	//
+	// * tag-key - The
+	// key of a tag assigned to the resource. Use this filter to find all resources
+	// that have a tag with a specific key, regardless of the tag value.
 	Filters []types.Filter
 
 	// The IDs of the placement groups.
