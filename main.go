@@ -142,6 +142,7 @@ func (n *Node) Annotate(key, value string) {
 	if val, ok := annotations[key]; !ok || val != value {
 		n.log.Infof("Setting Annotation: %s=%s", key, value)
 		annotations[key] = value
+		n.SetAnnotations(annotations)
 	}
 }
 
@@ -160,6 +161,7 @@ func (n *Node) Label(key, value string) {
 	if val, ok := labels[key]; !ok || val != value {
 		n.log.Infof("Setting Label: %s=%s", key, value)
 		labels[key] = value
+		n.SetLabels(labels)
 	}
 }
 
