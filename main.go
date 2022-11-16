@@ -2,7 +2,7 @@
 //
 // AWS Node Labeler
 //
-// Copyright © 2021 Brian Dwyer - Intelligent Digital Services
+// Copyright © 2022 Brian Dwyer - Intelligent Digital Services
 //
 
 package main
