@@ -1335,6 +1335,24 @@ func (DestinationFileFormat) Values() []DestinationFileFormat {
 	}
 }
 
+type DeviceTrustProviderType string
+
+// Enum values for DeviceTrustProviderType
+const (
+	DeviceTrustProviderTypeJamf        DeviceTrustProviderType = "jamf"
+	DeviceTrustProviderTypeCrowdstrike DeviceTrustProviderType = "crowdstrike"
+)
+
+// Values returns all known values for DeviceTrustProviderType. Note that this can
+// be expanded in the future, and so it is only as up to date as the client. The
+// ordering of this slice is not guaranteed to be stable across updates.
+func (DeviceTrustProviderType) Values() []DeviceTrustProviderType {
+	return []DeviceTrustProviderType{
+		"jamf",
+		"crowdstrike",
+	}
+}
+
 type DeviceType string
 
 // Enum values for DeviceType
@@ -3257,6 +3275,52 @@ const (
 	InstanceTypeU24tb1112xlarge InstanceType = "u-24tb1.112xlarge"
 	InstanceTypeTrn12xlarge     InstanceType = "trn1.2xlarge"
 	InstanceTypeTrn132xlarge    InstanceType = "trn1.32xlarge"
+	InstanceTypeHpc6id32xlarge  InstanceType = "hpc6id.32xlarge"
+	InstanceTypeC6inLarge       InstanceType = "c6in.large"
+	InstanceTypeC6inXlarge      InstanceType = "c6in.xlarge"
+	InstanceTypeC6in2xlarge     InstanceType = "c6in.2xlarge"
+	InstanceTypeC6in4xlarge     InstanceType = "c6in.4xlarge"
+	InstanceTypeC6in8xlarge     InstanceType = "c6in.8xlarge"
+	InstanceTypeC6in12xlarge    InstanceType = "c6in.12xlarge"
+	InstanceTypeC6in16xlarge    InstanceType = "c6in.16xlarge"
+	InstanceTypeC6in24xlarge    InstanceType = "c6in.24xlarge"
+	InstanceTypeC6in32xlarge    InstanceType = "c6in.32xlarge"
+	InstanceTypeM6inLarge       InstanceType = "m6in.large"
+	InstanceTypeM6inXlarge      InstanceType = "m6in.xlarge"
+	InstanceTypeM6in2xlarge     InstanceType = "m6in.2xlarge"
+	InstanceTypeM6in4xlarge     InstanceType = "m6in.4xlarge"
+	InstanceTypeM6in8xlarge     InstanceType = "m6in.8xlarge"
+	InstanceTypeM6in12xlarge    InstanceType = "m6in.12xlarge"
+	InstanceTypeM6in16xlarge    InstanceType = "m6in.16xlarge"
+	InstanceTypeM6in24xlarge    InstanceType = "m6in.24xlarge"
+	InstanceTypeM6in32xlarge    InstanceType = "m6in.32xlarge"
+	InstanceTypeM6idnLarge      InstanceType = "m6idn.large"
+	InstanceTypeM6idnXlarge     InstanceType = "m6idn.xlarge"
+	InstanceTypeM6idn2xlarge    InstanceType = "m6idn.2xlarge"
+	InstanceTypeM6idn4xlarge    InstanceType = "m6idn.4xlarge"
+	InstanceTypeM6idn8xlarge    InstanceType = "m6idn.8xlarge"
+	InstanceTypeM6idn12xlarge   InstanceType = "m6idn.12xlarge"
+	InstanceTypeM6idn16xlarge   InstanceType = "m6idn.16xlarge"
+	InstanceTypeM6idn24xlarge   InstanceType = "m6idn.24xlarge"
+	InstanceTypeM6idn32xlarge   InstanceType = "m6idn.32xlarge"
+	InstanceTypeR6inLarge       InstanceType = "r6in.large"
+	InstanceTypeR6inXlarge      InstanceType = "r6in.xlarge"
+	InstanceTypeR6in2xlarge     InstanceType = "r6in.2xlarge"
+	InstanceTypeR6in4xlarge     InstanceType = "r6in.4xlarge"
+	InstanceTypeR6in8xlarge     InstanceType = "r6in.8xlarge"
+	InstanceTypeR6in12xlarge    InstanceType = "r6in.12xlarge"
+	InstanceTypeR6in16xlarge    InstanceType = "r6in.16xlarge"
+	InstanceTypeR6in24xlarge    InstanceType = "r6in.24xlarge"
+	InstanceTypeR6in32xlarge    InstanceType = "r6in.32xlarge"
+	InstanceTypeR6idnLarge      InstanceType = "r6idn.large"
+	InstanceTypeR6idnXlarge     InstanceType = "r6idn.xlarge"
+	InstanceTypeR6idn2xlarge    InstanceType = "r6idn.2xlarge"
+	InstanceTypeR6idn4xlarge    InstanceType = "r6idn.4xlarge"
+	InstanceTypeR6idn8xlarge    InstanceType = "r6idn.8xlarge"
+	InstanceTypeR6idn12xlarge   InstanceType = "r6idn.12xlarge"
+	InstanceTypeR6idn16xlarge   InstanceType = "r6idn.16xlarge"
+	InstanceTypeR6idn24xlarge   InstanceType = "r6idn.24xlarge"
+	InstanceTypeR6idn32xlarge   InstanceType = "r6idn.32xlarge"
 )
 
 // Values returns all known values for InstanceType. Note that this can be expanded
@@ -3837,6 +3901,52 @@ func (InstanceType) Values() []InstanceType {
 		"u-24tb1.112xlarge",
 		"trn1.2xlarge",
 		"trn1.32xlarge",
+		"hpc6id.32xlarge",
+		"c6in.large",
+		"c6in.xlarge",
+		"c6in.2xlarge",
+		"c6in.4xlarge",
+		"c6in.8xlarge",
+		"c6in.12xlarge",
+		"c6in.16xlarge",
+		"c6in.24xlarge",
+		"c6in.32xlarge",
+		"m6in.large",
+		"m6in.xlarge",
+		"m6in.2xlarge",
+		"m6in.4xlarge",
+		"m6in.8xlarge",
+		"m6in.12xlarge",
+		"m6in.16xlarge",
+		"m6in.24xlarge",
+		"m6in.32xlarge",
+		"m6idn.large",
+		"m6idn.xlarge",
+		"m6idn.2xlarge",
+		"m6idn.4xlarge",
+		"m6idn.8xlarge",
+		"m6idn.12xlarge",
+		"m6idn.16xlarge",
+		"m6idn.24xlarge",
+		"m6idn.32xlarge",
+		"r6in.large",
+		"r6in.xlarge",
+		"r6in.2xlarge",
+		"r6in.4xlarge",
+		"r6in.8xlarge",
+		"r6in.12xlarge",
+		"r6in.16xlarge",
+		"r6in.24xlarge",
+		"r6in.32xlarge",
+		"r6idn.large",
+		"r6idn.xlarge",
+		"r6idn.2xlarge",
+		"r6idn.4xlarge",
+		"r6idn.8xlarge",
+		"r6idn.12xlarge",
+		"r6idn.16xlarge",
+		"r6idn.24xlarge",
+		"r6idn.32xlarge",
 	}
 }
 
@@ -3939,6 +4049,25 @@ func (IpamAddressHistoryResourceType) Values() []IpamAddressHistoryResourceType 
 	}
 }
 
+type IpamAssociatedResourceDiscoveryStatus string
+
+// Enum values for IpamAssociatedResourceDiscoveryStatus
+const (
+	IpamAssociatedResourceDiscoveryStatusActive   IpamAssociatedResourceDiscoveryStatus = "active"
+	IpamAssociatedResourceDiscoveryStatusNotFound IpamAssociatedResourceDiscoveryStatus = "not-found"
+)
+
+// Values returns all known values for IpamAssociatedResourceDiscoveryStatus. Note
+// that this can be expanded in the future, and so it is only as up to date as the
+// client. The ordering of this slice is not guaranteed to be stable across
+// updates.
+func (IpamAssociatedResourceDiscoveryStatus) Values() []IpamAssociatedResourceDiscoveryStatus {
+	return []IpamAssociatedResourceDiscoveryStatus{
+		"active",
+		"not-found",
+	}
+}
+
 type IpamComplianceStatus string
 
 // Enum values for IpamComplianceStatus
@@ -3958,6 +4087,26 @@ func (IpamComplianceStatus) Values() []IpamComplianceStatus {
 		"noncompliant",
 		"unmanaged",
 		"ignored",
+	}
+}
+
+type IpamDiscoveryFailureCode string
+
+// Enum values for IpamDiscoveryFailureCode
+const (
+	IpamDiscoveryFailureCodeAssumeRoleFailure   IpamDiscoveryFailureCode = "assume-role-failure"
+	IpamDiscoveryFailureCodeThrottlingFailure   IpamDiscoveryFailureCode = "throttling-failure"
+	IpamDiscoveryFailureCodeUnauthorizedFailure IpamDiscoveryFailureCode = "unauthorized-failure"
+)
+
+// Values returns all known values for IpamDiscoveryFailureCode. Note that this can
+// be expanded in the future, and so it is only as up to date as the client. The
+// ordering of this slice is not guaranteed to be stable across updates.
+func (IpamDiscoveryFailureCode) Values() []IpamDiscoveryFailureCode {
+	return []IpamDiscoveryFailureCode{
+		"assume-role-failure",
+		"throttling-failure",
+		"unauthorized-failure",
 	}
 }
 
@@ -4045,6 +4194,7 @@ type IpamPoolCidrFailureCode string
 // Enum values for IpamPoolCidrFailureCode
 const (
 	IpamPoolCidrFailureCodeCidrNotAvailable IpamPoolCidrFailureCode = "cidr-not-available"
+	IpamPoolCidrFailureCodeLimitExceeded    IpamPoolCidrFailureCode = "limit-exceeded"
 )
 
 // Values returns all known values for IpamPoolCidrFailureCode. Note that this can
@@ -4053,6 +4203,7 @@ const (
 func (IpamPoolCidrFailureCode) Values() []IpamPoolCidrFailureCode {
 	return []IpamPoolCidrFailureCode{
 		"cidr-not-available",
+		"limit-exceeded",
 	}
 }
 
@@ -4086,6 +4237,24 @@ func (IpamPoolCidrState) Values() []IpamPoolCidrState {
 	}
 }
 
+type IpamPoolPublicIpSource string
+
+// Enum values for IpamPoolPublicIpSource
+const (
+	IpamPoolPublicIpSourceAmazon IpamPoolPublicIpSource = "amazon"
+	IpamPoolPublicIpSourceByoip  IpamPoolPublicIpSource = "byoip"
+)
+
+// Values returns all known values for IpamPoolPublicIpSource. Note that this can
+// be expanded in the future, and so it is only as up to date as the client. The
+// ordering of this slice is not guaranteed to be stable across updates.
+func (IpamPoolPublicIpSource) Values() []IpamPoolPublicIpSource {
+	return []IpamPoolPublicIpSource{
+		"amazon",
+		"byoip",
+	}
+}
+
 type IpamPoolState string
 
 // Enum values for IpamPoolState
@@ -4109,6 +4278,77 @@ const (
 // ordering of this slice is not guaranteed to be stable across updates.
 func (IpamPoolState) Values() []IpamPoolState {
 	return []IpamPoolState{
+		"create-in-progress",
+		"create-complete",
+		"create-failed",
+		"modify-in-progress",
+		"modify-complete",
+		"modify-failed",
+		"delete-in-progress",
+		"delete-complete",
+		"delete-failed",
+		"isolate-in-progress",
+		"isolate-complete",
+		"restore-in-progress",
+	}
+}
+
+type IpamResourceDiscoveryAssociationState string
+
+// Enum values for IpamResourceDiscoveryAssociationState
+const (
+	IpamResourceDiscoveryAssociationStateAssociateInProgress    IpamResourceDiscoveryAssociationState = "associate-in-progress"
+	IpamResourceDiscoveryAssociationStateAssociateComplete      IpamResourceDiscoveryAssociationState = "associate-complete"
+	IpamResourceDiscoveryAssociationStateAssociateFailed        IpamResourceDiscoveryAssociationState = "associate-failed"
+	IpamResourceDiscoveryAssociationStateDisassociateInProgress IpamResourceDiscoveryAssociationState = "disassociate-in-progress"
+	IpamResourceDiscoveryAssociationStateDisassociateComplete   IpamResourceDiscoveryAssociationState = "disassociate-complete"
+	IpamResourceDiscoveryAssociationStateDisassociateFailed     IpamResourceDiscoveryAssociationState = "disassociate-failed"
+	IpamResourceDiscoveryAssociationStateIsolateInProgress      IpamResourceDiscoveryAssociationState = "isolate-in-progress"
+	IpamResourceDiscoveryAssociationStateIsolateComplete        IpamResourceDiscoveryAssociationState = "isolate-complete"
+	IpamResourceDiscoveryAssociationStateRestoreInProgress      IpamResourceDiscoveryAssociationState = "restore-in-progress"
+)
+
+// Values returns all known values for IpamResourceDiscoveryAssociationState. Note
+// that this can be expanded in the future, and so it is only as up to date as the
+// client. The ordering of this slice is not guaranteed to be stable across
+// updates.
+func (IpamResourceDiscoveryAssociationState) Values() []IpamResourceDiscoveryAssociationState {
+	return []IpamResourceDiscoveryAssociationState{
+		"associate-in-progress",
+		"associate-complete",
+		"associate-failed",
+		"disassociate-in-progress",
+		"disassociate-complete",
+		"disassociate-failed",
+		"isolate-in-progress",
+		"isolate-complete",
+		"restore-in-progress",
+	}
+}
+
+type IpamResourceDiscoveryState string
+
+// Enum values for IpamResourceDiscoveryState
+const (
+	IpamResourceDiscoveryStateCreateInProgress  IpamResourceDiscoveryState = "create-in-progress"
+	IpamResourceDiscoveryStateCreateComplete    IpamResourceDiscoveryState = "create-complete"
+	IpamResourceDiscoveryStateCreateFailed      IpamResourceDiscoveryState = "create-failed"
+	IpamResourceDiscoveryStateModifyInProgress  IpamResourceDiscoveryState = "modify-in-progress"
+	IpamResourceDiscoveryStateModifyComplete    IpamResourceDiscoveryState = "modify-complete"
+	IpamResourceDiscoveryStateModifyFailed      IpamResourceDiscoveryState = "modify-failed"
+	IpamResourceDiscoveryStateDeleteInProgress  IpamResourceDiscoveryState = "delete-in-progress"
+	IpamResourceDiscoveryStateDeleteComplete    IpamResourceDiscoveryState = "delete-complete"
+	IpamResourceDiscoveryStateDeleteFailed      IpamResourceDiscoveryState = "delete-failed"
+	IpamResourceDiscoveryStateIsolateInProgress IpamResourceDiscoveryState = "isolate-in-progress"
+	IpamResourceDiscoveryStateIsolateComplete   IpamResourceDiscoveryState = "isolate-complete"
+	IpamResourceDiscoveryStateRestoreInProgress IpamResourceDiscoveryState = "restore-in-progress"
+)
+
+// Values returns all known values for IpamResourceDiscoveryState. Note that this
+// can be expanded in the future, and so it is only as up to date as the client.
+// The ordering of this slice is not guaranteed to be stable across updates.
+func (IpamResourceDiscoveryState) Values() []IpamResourceDiscoveryState {
+	return []IpamResourceDiscoveryState{
 		"create-in-progress",
 		"create-complete",
 		"create-failed",
@@ -4652,6 +4892,22 @@ func (MembershipType) Values() []MembershipType {
 	}
 }
 
+type MetricType string
+
+// Enum values for MetricType
+const (
+	MetricTypeAggregateLatency MetricType = "aggregate-latency"
+)
+
+// Values returns all known values for MetricType. Note that this can be expanded
+// in the future, and so it is only as up to date as the client. The ordering of
+// this slice is not guaranteed to be stable across updates.
+func (MetricType) Values() []MetricType {
+	return []MetricType{
+		"aggregate-latency",
+	}
+}
+
 type ModifyAvailabilityZoneOptInStatus string
 
 // Enum values for ModifyAvailabilityZoneOptInStatus
@@ -4726,6 +4982,32 @@ func (MulticastSupportValue) Values() []MulticastSupportValue {
 	return []MulticastSupportValue{
 		"enable",
 		"disable",
+	}
+}
+
+type NatGatewayAddressStatus string
+
+// Enum values for NatGatewayAddressStatus
+const (
+	NatGatewayAddressStatusAssigning      NatGatewayAddressStatus = "assigning"
+	NatGatewayAddressStatusUnassigning    NatGatewayAddressStatus = "unassigning"
+	NatGatewayAddressStatusAssociating    NatGatewayAddressStatus = "associating"
+	NatGatewayAddressStatusDisassociating NatGatewayAddressStatus = "disassociating"
+	NatGatewayAddressStatusSucceeded      NatGatewayAddressStatus = "succeeded"
+	NatGatewayAddressStatusFailed         NatGatewayAddressStatus = "failed"
+)
+
+// Values returns all known values for NatGatewayAddressStatus. Note that this can
+// be expanded in the future, and so it is only as up to date as the client. The
+// ordering of this slice is not guaranteed to be stable across updates.
+func (NatGatewayAddressStatus) Values() []NatGatewayAddressStatus {
+	return []NatGatewayAddressStatus{
+		"assigning",
+		"unassigning",
+		"associating",
+		"disassociating",
+		"succeeded",
+		"failed",
 	}
 }
 
@@ -5025,6 +5307,32 @@ func (PaymentOption) Values() []PaymentOption {
 		"AllUpfront",
 		"PartialUpfront",
 		"NoUpfront",
+	}
+}
+
+type PeriodType string
+
+// Enum values for PeriodType
+const (
+	PeriodTypeFiveMinutes    PeriodType = "five-minutes"
+	PeriodTypeFifteenMinutes PeriodType = "fifteen-minutes"
+	PeriodTypeOneHour        PeriodType = "one-hour"
+	PeriodTypeThreeHours     PeriodType = "three-hours"
+	PeriodTypeOneDay         PeriodType = "one-day"
+	PeriodTypeOneWeek        PeriodType = "one-week"
+)
+
+// Values returns all known values for PeriodType. Note that this can be expanded
+// in the future, and so it is only as up to date as the client. The ordering of
+// this slice is not guaranteed to be stable across updates.
+func (PeriodType) Values() []PeriodType {
+	return []PeriodType{
+		"five-minutes",
+		"fifteen-minutes",
+		"one-hour",
+		"three-hours",
+		"one-day",
+		"one-week",
 	}
 }
 
@@ -5508,7 +5816,15 @@ const (
 	ResourceTypeCapacityReservationFleet                               ResourceType = "capacity-reservation-fleet"
 	ResourceTypeTrafficMirrorFilterRule                                ResourceType = "traffic-mirror-filter-rule"
 	ResourceTypeVpcEndpointConnectionDeviceType                        ResourceType = "vpc-endpoint-connection-device-type"
+	ResourceTypeVerifiedAccessInstance                                 ResourceType = "verified-access-instance"
+	ResourceTypeVerifiedAccessGroup                                    ResourceType = "verified-access-group"
+	ResourceTypeVerifiedAccessEndpoint                                 ResourceType = "verified-access-endpoint"
+	ResourceTypeVerifiedAccessPolicy                                   ResourceType = "verified-access-policy"
+	ResourceTypeVerifiedAccessTrustProvider                            ResourceType = "verified-access-trust-provider"
 	ResourceTypeVpnConnectionDeviceType                                ResourceType = "vpn-connection-device-type"
+	ResourceTypeVpcBlockPublicAccessExclusion                          ResourceType = "vpc-block-public-access-exclusion"
+	ResourceTypeIpamResourceDiscovery                                  ResourceType = "ipam-resource-discovery"
+	ResourceTypeIpamResourceDiscoveryAssociation                       ResourceType = "ipam-resource-discovery-association"
 )
 
 // Values returns all known values for ResourceType. Note that this can be expanded
@@ -5592,7 +5908,15 @@ func (ResourceType) Values() []ResourceType {
 		"capacity-reservation-fleet",
 		"traffic-mirror-filter-rule",
 		"vpc-endpoint-connection-device-type",
+		"verified-access-instance",
+		"verified-access-group",
+		"verified-access-endpoint",
+		"verified-access-policy",
+		"verified-access-trust-provider",
 		"vpn-connection-device-type",
+		"vpc-block-public-access-exclusion",
+		"ipam-resource-discovery",
+		"ipam-resource-discovery-association",
 	}
 }
 
@@ -6017,6 +6341,22 @@ func (StaticSourcesSupportValue) Values() []StaticSourcesSupportValue {
 	return []StaticSourcesSupportValue{
 		"enable",
 		"disable",
+	}
+}
+
+type StatisticType string
+
+// Enum values for StatisticType
+const (
+	StatisticTypeP50 StatisticType = "p50"
+)
+
+// Values returns all known values for StatisticType. Note that this can be
+// expanded in the future, and so it is only as up to date as the client. The
+// ordering of this slice is not guaranteed to be stable across updates.
+func (StatisticType) Values() []StatisticType {
+	return []StatisticType{
+		"p50",
 	}
 }
 
@@ -6826,6 +7166,24 @@ func (TransportProtocol) Values() []TransportProtocol {
 	}
 }
 
+type TrustProviderType string
+
+// Enum values for TrustProviderType
+const (
+	TrustProviderTypeUser   TrustProviderType = "user"
+	TrustProviderTypeDevice TrustProviderType = "device"
+)
+
+// Values returns all known values for TrustProviderType. Note that this can be
+// expanded in the future, and so it is only as up to date as the client. The
+// ordering of this slice is not guaranteed to be stable across updates.
+func (TrustProviderType) Values() []TrustProviderType {
+	return []TrustProviderType{
+		"user",
+		"device",
+	}
+}
+
 type TunnelInsideIpVersion string
 
 // Enum values for TunnelInsideIpVersion
@@ -6905,6 +7263,122 @@ func (UsageClassType) Values() []UsageClassType {
 	return []UsageClassType{
 		"spot",
 		"on-demand",
+	}
+}
+
+type UserTrustProviderType string
+
+// Enum values for UserTrustProviderType
+const (
+	UserTrustProviderTypeIamIdentityCenter UserTrustProviderType = "iam-identity-center"
+	UserTrustProviderTypeOidc              UserTrustProviderType = "oidc"
+)
+
+// Values returns all known values for UserTrustProviderType. Note that this can be
+// expanded in the future, and so it is only as up to date as the client. The
+// ordering of this slice is not guaranteed to be stable across updates.
+func (UserTrustProviderType) Values() []UserTrustProviderType {
+	return []UserTrustProviderType{
+		"iam-identity-center",
+		"oidc",
+	}
+}
+
+type VerifiedAccessEndpointAttachmentType string
+
+// Enum values for VerifiedAccessEndpointAttachmentType
+const (
+	VerifiedAccessEndpointAttachmentTypeVpc VerifiedAccessEndpointAttachmentType = "vpc"
+)
+
+// Values returns all known values for VerifiedAccessEndpointAttachmentType. Note
+// that this can be expanded in the future, and so it is only as up to date as the
+// client. The ordering of this slice is not guaranteed to be stable across
+// updates.
+func (VerifiedAccessEndpointAttachmentType) Values() []VerifiedAccessEndpointAttachmentType {
+	return []VerifiedAccessEndpointAttachmentType{
+		"vpc",
+	}
+}
+
+type VerifiedAccessEndpointProtocol string
+
+// Enum values for VerifiedAccessEndpointProtocol
+const (
+	VerifiedAccessEndpointProtocolHttp  VerifiedAccessEndpointProtocol = "http"
+	VerifiedAccessEndpointProtocolHttps VerifiedAccessEndpointProtocol = "https"
+)
+
+// Values returns all known values for VerifiedAccessEndpointProtocol. Note that
+// this can be expanded in the future, and so it is only as up to date as the
+// client. The ordering of this slice is not guaranteed to be stable across
+// updates.
+func (VerifiedAccessEndpointProtocol) Values() []VerifiedAccessEndpointProtocol {
+	return []VerifiedAccessEndpointProtocol{
+		"http",
+		"https",
+	}
+}
+
+type VerifiedAccessEndpointStatusCode string
+
+// Enum values for VerifiedAccessEndpointStatusCode
+const (
+	VerifiedAccessEndpointStatusCodePending  VerifiedAccessEndpointStatusCode = "pending"
+	VerifiedAccessEndpointStatusCodeActive   VerifiedAccessEndpointStatusCode = "active"
+	VerifiedAccessEndpointStatusCodeUpdating VerifiedAccessEndpointStatusCode = "updating"
+	VerifiedAccessEndpointStatusCodeDeleting VerifiedAccessEndpointStatusCode = "deleting"
+	VerifiedAccessEndpointStatusCodeDeleted  VerifiedAccessEndpointStatusCode = "deleted"
+)
+
+// Values returns all known values for VerifiedAccessEndpointStatusCode. Note that
+// this can be expanded in the future, and so it is only as up to date as the
+// client. The ordering of this slice is not guaranteed to be stable across
+// updates.
+func (VerifiedAccessEndpointStatusCode) Values() []VerifiedAccessEndpointStatusCode {
+	return []VerifiedAccessEndpointStatusCode{
+		"pending",
+		"active",
+		"updating",
+		"deleting",
+		"deleted",
+	}
+}
+
+type VerifiedAccessEndpointType string
+
+// Enum values for VerifiedAccessEndpointType
+const (
+	VerifiedAccessEndpointTypeLoadBalancer     VerifiedAccessEndpointType = "load-balancer"
+	VerifiedAccessEndpointTypeNetworkInterface VerifiedAccessEndpointType = "network-interface"
+)
+
+// Values returns all known values for VerifiedAccessEndpointType. Note that this
+// can be expanded in the future, and so it is only as up to date as the client.
+// The ordering of this slice is not guaranteed to be stable across updates.
+func (VerifiedAccessEndpointType) Values() []VerifiedAccessEndpointType {
+	return []VerifiedAccessEndpointType{
+		"load-balancer",
+		"network-interface",
+	}
+}
+
+type VerifiedAccessLogDeliveryStatusCode string
+
+// Enum values for VerifiedAccessLogDeliveryStatusCode
+const (
+	VerifiedAccessLogDeliveryStatusCodeSuccess VerifiedAccessLogDeliveryStatusCode = "success"
+	VerifiedAccessLogDeliveryStatusCodeFailed  VerifiedAccessLogDeliveryStatusCode = "failed"
+)
+
+// Values returns all known values for VerifiedAccessLogDeliveryStatusCode. Note
+// that this can be expanded in the future, and so it is only as up to date as the
+// client. The ordering of this slice is not guaranteed to be stable across
+// updates.
+func (VerifiedAccessLogDeliveryStatusCode) Values() []VerifiedAccessLogDeliveryStatusCode {
+	return []VerifiedAccessLogDeliveryStatusCode{
+		"success",
+		"failed",
 	}
 }
 
