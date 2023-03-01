@@ -1,5 +1,5 @@
-# github.com/Jeffail/gabs/v2 v2.6.1
-## explicit
+# github.com/Jeffail/gabs/v2 v2.7.0
+## explicit; go 1.16
 github.com/Jeffail/gabs/v2
 # github.com/PuerkitoBio/purell v1.1.1
 ## explicit

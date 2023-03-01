@@ -3,7 +3,7 @@ module aws-node-labeler
 go 1.19
 
 require (
-	github.com/Jeffail/gabs/v2 v2.6.1
+	github.com/Jeffail/gabs/v2 v2.7.0
 	github.com/aws/amazon-vpc-resource-controller-k8s v1.1.4
 	github.com/aws/aws-sdk-go-v2/config v1.18.1
 	github.com/aws/aws-sdk-go-v2/service/ec2 v1.70.0
