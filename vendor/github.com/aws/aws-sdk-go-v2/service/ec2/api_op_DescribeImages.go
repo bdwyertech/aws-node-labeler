@@ -133,7 +133,7 @@ type DescribeImagesInput struct {
 	// ID of the owner. We recommend that you use the Owner request parameter instead
 	// of this filter.
 	//
-	// * platform - The platform. To only list Windows-based AMIs, use
+	// * platform - The platform. The only supported value is
 	// windows.
 	//
 	// * product-code - The product code.
@@ -183,6 +183,16 @@ type DescribeImagesInput struct {
 	// in the response regardless of what you specify for this parameter.
 	IncludeDeprecated *bool
 
+	// The maximum number of items to return for this request. To get the next page of
+	// items, make another request with the token returned in the output. For more
+	// information, see Pagination
+	// (https://docs.aws.amazon.com/AWSEC2/latest/APIReference/Query-Requests.html#api-pagination).
+	MaxResults *int32
+
+	// The token returned from a previous paginated request. Pagination continues from
+	// the end of the items returned by the previous request.
+	NextToken *string
+
 	// Scopes the results to images with the specified owners. You can specify a
 	// combination of Amazon Web Services account IDs, self, amazon, and
 	// aws-marketplace. If you omit this parameter, the results include all images for
@@ -196,6 +206,10 @@ type DescribeImagesOutput struct {
 
 	// Information about the images.
 	Images []types.Image
+
+	// The token to include in another request to get the next page of items. This
+	// value is null when there are no more items to return.
+	NextToken *string
 
 	// Metadata pertaining to the operation's result.
 	ResultMetadata middleware.Metadata
@@ -270,6 +284,91 @@ type DescribeImagesAPIClient interface {
 }
 
 var _ DescribeImagesAPIClient = (*Client)(nil)
+
+// DescribeImagesPaginatorOptions is the paginator options for DescribeImages
+type DescribeImagesPaginatorOptions struct {
+	// The maximum number of items to return for this request. To get the next page of
+	// items, make another request with the token returned in the output. For more
+	// information, see Pagination
+	// (https://docs.aws.amazon.com/AWSEC2/latest/APIReference/Query-Requests.html#api-pagination).
+	Limit int32
+
+	// Set to true if pagination should stop if the service returns a pagination token
+	// that matches the most recent token provided to the service.
+	StopOnDuplicateToken bool
+}
+
+// DescribeImagesPaginator is a paginator for DescribeImages
+type DescribeImagesPaginator struct {
+	options   DescribeImagesPaginatorOptions
+	client    DescribeImagesAPIClient
+	params    *DescribeImagesInput
+	nextToken *string
+	firstPage bool
+}
+
+// NewDescribeImagesPaginator returns a new DescribeImagesPaginator
+func NewDescribeImagesPaginator(client DescribeImagesAPIClient, params *DescribeImagesInput, optFns ...func(*DescribeImagesPaginatorOptions)) *DescribeImagesPaginator {
+	if params == nil {
+		params = &DescribeImagesInput{}
+	}
+
+	options := DescribeImagesPaginatorOptions{}
+	if params.MaxResults != nil {
+		options.Limit = *params.MaxResults
+	}
+
+	for _, fn := range optFns {
+		fn(&options)
+	}
+
+	return &DescribeImagesPaginator{
+		options:   options,
+		client:    client,
+		params:    params,
+		firstPage: true,
+		nextToken: params.NextToken,
+	}
+}
+
+// HasMorePages returns a boolean indicating whether more pages are available
+func (p *DescribeImagesPaginator) HasMorePages() bool {
+	return p.firstPage || (p.nextToken != nil && len(*p.nextToken) != 0)
+}
+
+// NextPage retrieves the next DescribeImages page.
+func (p *DescribeImagesPaginator) NextPage(ctx context.Context, optFns ...func(*Options)) (*DescribeImagesOutput, error) {
+	if !p.HasMorePages() {
+		return nil, fmt.Errorf("no more pages available")
+	}
+
+	params := *p.params
+	params.NextToken = p.nextToken
+
+	var limit *int32
+	if p.options.Limit > 0 {
+		limit = &p.options.Limit
+	}
+	params.MaxResults = limit
+
+	result, err := p.client.DescribeImages(ctx, &params, optFns...)
+	if err != nil {
+		return nil, err
+	}
+	p.firstPage = false
+
+	prevToken := p.nextToken
+	p.nextToken = result.NextToken
+
+	if p.options.StopOnDuplicateToken &&
+		prevToken != nil &&
+		p.nextToken != nil &&
+		*prevToken == *p.nextToken {
+		p.nextToken = nil
+	}
+
+	return result, nil
+}
 
 // ImageAvailableWaiterOptions are waiter options for ImageAvailableWaiter
 type ImageAvailableWaiterOptions struct {

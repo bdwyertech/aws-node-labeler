@@ -191,7 +191,14 @@ type RunInstancesInput struct {
 	// An elastic inference accelerator to associate with the instance. Elastic
 	// inference accelerators are a resource you can attach to your Amazon EC2
 	// instances to accelerate your Deep Learning (DL) inference workloads. You cannot
-	// specify accelerators from different generations in the same request.
+	// specify accelerators from different generations in the same request. Starting
+	// April 15, 2023, Amazon Web Services will not onboard new customers to Amazon
+	// Elastic Inference (EI), and will help current customers migrate their workloads
+	// to options that offer better price and performance. After April 15, 2023, new
+	// customers will not be able to launch instances with Amazon EI accelerators in
+	// Amazon SageMaker, Amazon ECS, or Amazon EC2. However, customers who have used
+	// Amazon EI at least once during the past 30-day period are considered current
+	// customers and will be able to continue using the service.
 	ElasticInferenceAccelerators []types.ElasticInferenceAccelerator
 
 	// Indicates whether the instance is enabled for Amazon Web Services Nitro
@@ -315,9 +322,8 @@ type RunInstancesInput struct {
 	// of the network interface.
 	SecurityGroupIds []string
 
-	// [EC2-Classic, default VPC] The names of the security groups. For a nondefault
-	// VPC, you must use security group IDs instead. If you specify a network
-	// interface, you must specify any security groups as part of the network
+	// [EC2-Classic, default VPC] The names of the security groups. If you specify a
+	// network interface, you must specify any security groups as part of the network
 	// interface. Default: Amazon EC2 uses the default security group.
 	SecurityGroups []string
 
