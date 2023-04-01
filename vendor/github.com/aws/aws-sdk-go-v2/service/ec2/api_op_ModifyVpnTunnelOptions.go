@@ -55,12 +55,16 @@ type ModifyVpnTunnelOptionsInput struct {
 	// UnauthorizedOperation.
 	DryRun *bool
 
+	// Choose whether or not to trigger immediate tunnel replacement. Valid values:
+	// True | False
+	SkipTunnelReplacement *bool
+
 	noSmithyDocumentSerde
 }
 
 type ModifyVpnTunnelOptionsOutput struct {
 
-	// Describes a VPN connection.
+	// Information about the VPN connection.
 	VpnConnection *types.VpnConnection
 
 	// Metadata pertaining to the operation's result.

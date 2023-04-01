@@ -21,10 +21,10 @@ import (
 // To use this API, you must have the required permissions. For more information,
 // see Permissions for storing and restoring AMIs using Amazon S3
 // (https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ami-store-restore.html#ami-s3-permissions)
-// in the Amazon Elastic Compute Cloud User Guide. For more information, see Store
-// and restore an AMI using Amazon S3
+// in the Amazon EC2 User Guide. For more information, see Store and restore an AMI
+// using Amazon S3
 // (https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ami-store-restore.html) in
-// the Amazon Elastic Compute Cloud User Guide.
+// the Amazon EC2 User Guide.
 func (c *Client) DescribeStoreImageTasks(ctx context.Context, params *DescribeStoreImageTasksInput, optFns ...func(*Options)) (*DescribeStoreImageTasksOutput, error) {
 	if params == nil {
 		params = &DescribeStoreImageTasksInput{}
@@ -61,13 +61,15 @@ type DescribeStoreImageTasksInput struct {
 	// request.
 	ImageIds []string
 
-	// The maximum number of results to return in a single call. To retrieve the
-	// remaining results, make another call with the returned NextToken value. This
-	// value can be between 1 and 200. You cannot specify this parameter and the
-	// ImageIDs parameter in the same call.
+	// The maximum number of items to return for this request. To get the next page of
+	// items, make another request with the token returned in the output. For more
+	// information, see Pagination
+	// (https://docs.aws.amazon.com/AWSEC2/latest/APIReference/Query-Requests.html#api-pagination).
+	// You cannot specify this parameter and the ImageIDs parameter in the same call.
 	MaxResults *int32
 
-	// The token for the next page of results.
+	// The token returned from a previous paginated request. Pagination continues from
+	// the end of the items returned by the previous request.
 	NextToken *string
 
 	noSmithyDocumentSerde
@@ -75,8 +77,8 @@ type DescribeStoreImageTasksInput struct {
 
 type DescribeStoreImageTasksOutput struct {
 
-	// The token to use to retrieve the next page of results. This value is null when
-	// there are no more results to return.
+	// The token to include in another request to get the next page of items. This
+	// value is null when there are no more items to return.
 	NextToken *string
 
 	// The information about the AMI store tasks.
@@ -159,10 +161,11 @@ var _ DescribeStoreImageTasksAPIClient = (*Client)(nil)
 // DescribeStoreImageTasksPaginatorOptions is the paginator options for
 // DescribeStoreImageTasks
 type DescribeStoreImageTasksPaginatorOptions struct {
-	// The maximum number of results to return in a single call. To retrieve the
-	// remaining results, make another call with the returned NextToken value. This
-	// value can be between 1 and 200. You cannot specify this parameter and the
-	// ImageIDs parameter in the same call.
+	// The maximum number of items to return for this request. To get the next page of
+	// items, make another request with the token returned in the output. For more
+	// information, see Pagination
+	// (https://docs.aws.amazon.com/AWSEC2/latest/APIReference/Query-Requests.html#api-pagination).
+	// You cannot specify this parameter and the ImageIDs parameter in the same call.
 	Limit int32
 
 	// Set to true if pagination should stop if the service returns a pagination token

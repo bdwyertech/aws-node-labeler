@@ -163,15 +163,19 @@ type DescribeInstancesInput struct {
 	// request authorization state (optional | required)
 	//
 	// *
-	// metadata-options.http-put-response-hop-limit - The http metadata request put
+	// metadata-options.http-put-response-hop-limit - The HTTP metadata request put
 	// response hop limit (integer, possible values 1 to 64)
 	//
 	// *
-	// metadata-options.http-endpoint - Enable or disable metadata access on http
-	// endpoint (enabled | disabled)
+	// metadata-options.http-endpoint - The status of access to the HTTP metadata
+	// endpoint on your instance (enabled | disabled)
 	//
-	// * monitoring-state - Indicates whether detailed
-	// monitoring is enabled (disabled | enabled).
+	// *
+	// metadata-options.instance-metadata-tags - The status of access to instance tags
+	// from the instance metadata (enabled | disabled)
+	//
+	// * monitoring-state - Indicates
+	// whether detailed monitoring is enabled (disabled | enabled).
 	//
 	// *
 	// network-interface.addresses.private-ip-address - The private IPv4 address
@@ -373,13 +377,16 @@ type DescribeInstancesInput struct {
 	// The instance IDs. Default: Describes all your instances.
 	InstanceIds []string
 
-	// The maximum number of results to return in a single call. To retrieve the
-	// remaining results, make another call with the returned NextToken value. This
-	// value can be between 5 and 1000. You cannot specify this parameter and the
-	// instance IDs parameter in the same call.
+	// The maximum number of items to return for this request. To get the next page of
+	// items, make another request with the token returned in the output. For more
+	// information, see Pagination
+	// (https://docs.aws.amazon.com/AWSEC2/latest/APIReference/Query-Requests.html#api-pagination).
+	// You cannot specify this parameter and the instance IDs parameter in the same
+	// request.
 	MaxResults *int32
 
-	// The token to request the next page of results.
+	// The token returned from a previous paginated request. Pagination continues from
+	// the end of the items returned by the previous request.
 	NextToken *string
 
 	noSmithyDocumentSerde
@@ -387,8 +394,8 @@ type DescribeInstancesInput struct {
 
 type DescribeInstancesOutput struct {
 
-	// The token to use to retrieve the next page of results. This value is null when
-	// there are no more results to return.
+	// The token to include in another request to get the next page of items. This
+	// value is null when there are no more items to return.
 	NextToken *string
 
 	// Information about the reservations.
@@ -470,10 +477,12 @@ var _ DescribeInstancesAPIClient = (*Client)(nil)
 
 // DescribeInstancesPaginatorOptions is the paginator options for DescribeInstances
 type DescribeInstancesPaginatorOptions struct {
-	// The maximum number of results to return in a single call. To retrieve the
-	// remaining results, make another call with the returned NextToken value. This
-	// value can be between 5 and 1000. You cannot specify this parameter and the
-	// instance IDs parameter in the same call.
+	// The maximum number of items to return for this request. To get the next page of
+	// items, make another request with the token returned in the output. For more
+	// information, see Pagination
+	// (https://docs.aws.amazon.com/AWSEC2/latest/APIReference/Query-Requests.html#api-pagination).
+	// You cannot specify this parameter and the instance IDs parameter in the same
+	// request.
 	Limit int32
 
 	// Set to true if pagination should stop if the service returns a pagination token

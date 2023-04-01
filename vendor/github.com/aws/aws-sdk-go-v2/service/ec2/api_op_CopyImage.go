@@ -15,27 +15,23 @@ import (
 // from one Outpost to another, or within the same Outpost. To copy an AMI to
 // another partition, see CreateStoreImageTask
 // (https://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_CreateStoreImageTask.html).
-// To copy an AMI from one Region to another, specify the source Region using
-// the
-//
-// SourceRegion parameter, and specify the destination Region using its
-// endpoint. Copies of encrypted backing snapshots for the AMI are encrypted.
-// Copies of unencrypted backing snapshots remain unencrypted, unless you set
-// Encrypted during the copy operation. You cannot create an unencrypted copy of an
-// encrypted backing snapshot. To copy an AMI from a Region to an Outpost, specify
-// the source Region using the
-//
-// SourceRegion parameter, and specify the ARN of the
-// destination Outpost using DestinationOutpostArn. Backing snapshots copied to an
-// Outpost are encrypted by default using the default encryption key for the
-// Region, or a different key that you specify in the request using KmsKeyId.
-// Outposts do not support unencrypted snapshots. For more information,  Amazon EBS
-// local snapshots on Outposts
+// To copy an AMI from one Region to another, specify the source Region using the
+// SourceRegion parameter, and specify the destination Region using its endpoint.
+// Copies of encrypted backing snapshots for the AMI are encrypted. Copies of
+// unencrypted backing snapshots remain unencrypted, unless you set Encrypted
+// during the copy operation. You cannot create an unencrypted copy of an encrypted
+// backing snapshot. To copy an AMI from a Region to an Outpost, specify the source
+// Region using the SourceRegion parameter, and specify the ARN of the destination
+// Outpost using DestinationOutpostArn. Backing snapshots copied to an Outpost are
+// encrypted by default using the default encryption key for the Region, or a
+// different key that you specify in the request using KmsKeyId. Outposts do not
+// support unencrypted snapshots. For more information,  Amazon EBS local snapshots
+// on Outposts
 // (https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/snapshots-outposts.html#ami)
-// in the Amazon Elastic Compute Cloud User Guide. For more information about the
-// prerequisites and limits when copying an AMI, see Copying an AMI
+// in the Amazon EC2 User Guide. For more information about the prerequisites and
+// limits when copying an AMI, see Copy an AMI
 // (https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/CopyingAMIs.html) in the
-// Amazon Elastic Compute Cloud User Guide.
+// Amazon EC2 User Guide.
 func (c *Client) CopyImage(ctx context.Context, params *CopyImageInput, optFns ...func(*Options)) (*CopyImageOutput, error) {
 	if params == nil {
 		params = &CopyImageInput{}
@@ -75,6 +71,18 @@ type CopyImageInput struct {
 	// in the Amazon EC2 API Reference.
 	ClientToken *string
 
+	// Indicates whether to include your user-defined AMI tags when copying the AMI.
+	// The following tags will not be copied:
+	//
+	// * System tags (prefixed with aws:)
+	//
+	// *
+	// For public and shared AMIs, user-defined tags that are attached by other Amazon
+	// Web Services accounts
+	//
+	// Default: Your user-defined AMI tags are not copied.
+	CopyImageTags *bool
+
 	// A description for the new AMI in the destination Region.
 	Description *string
 
@@ -82,10 +90,10 @@ type CopyImageInput struct {
 	// specify this parameter when copying an AMI from an Amazon Web Services Region to
 	// an Outpost. The AMI must be in the Region of the destination Outpost. You cannot
 	// copy an AMI from an Outpost to a Region, from one Outpost to another, or within
-	// the same Outpost. For more information, see  Copying AMIs from an Amazon Web
+	// the same Outpost. For more information, see  Copy AMIs from an Amazon Web
 	// Services Region to an Outpost
 	// (https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/snapshots-outposts.html#copy-amis)
-	// in the Amazon Elastic Compute Cloud User Guide.
+	// in the Amazon EC2 User Guide.
 	DestinationOutpostArn *string
 
 	// Checks whether you have the required permissions for the action, without
@@ -98,9 +106,9 @@ type CopyImageInput struct {
 	// encrypted. You can encrypt a copy of an unencrypted snapshot, but you cannot
 	// create an unencrypted copy of an encrypted snapshot. The default KMS key for
 	// Amazon EBS is used unless you specify a non-default Key Management Service (KMS)
-	// KMS key using KmsKeyId. For more information, see Amazon EBS Encryption
+	// KMS key using KmsKeyId. For more information, see Amazon EBS encryption
 	// (https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/EBSEncryption.html) in the
-	// Amazon Elastic Compute Cloud User Guide.
+	// Amazon EC2 User Guide.
 	Encrypted *bool
 
 	// The identifier of the symmetric Key Management Service (KMS) KMS key to use when
