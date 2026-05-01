@@ -20,7 +20,6 @@ import (
 	"sync"
 	"time"
 
-	"k8s.io/klog/v2"
 	"k8s.io/utils/clock"
 )
 
@@ -100,7 +99,6 @@ func (c *ExpirationCache) getOrExpire(key string) (interface{}, bool) {
 		return nil, false
 	}
 	if c.expirationPolicy.IsExpired(timestampedItem) {
-		klog.V(4).Infof("Entry %v: %+v has expired", key, timestampedItem.Obj)
 		c.cacheStorage.Delete(key)
 		return nil, false
 	}
@@ -139,6 +137,16 @@ func (c *ExpirationCache) List() []interface{} {
 	return list
 }
 
+// LastStoreSyncResourceVersion returns the latest resource version that the cache has seen.
+func (c *ExpirationCache) LastStoreSyncResourceVersion() string {
+	return c.cacheStorage.LastStoreSyncResourceVersion()
+}
+
+// Bookmark observes a new resource version in the cache.
+func (c *ExpirationCache) Bookmark(rv string) {
+	c.cacheStorage.Bookmark(rv)
+}
+
 // ListKeys returns a list of all keys in the expiration cache.
 func (c *ExpirationCache) ListKeys() []string {
 	return c.cacheStorage.ListKeys()
@@ -172,7 +180,7 @@ func (c *ExpirationCache) Delete(obj interface{}) error {
 	}
 	c.expirationLock.Lock()
 	defer c.expirationLock.Unlock()
-	c.cacheStorage.Delete(key)
+	c.cacheStorage.DeleteWithObject(key, obj)
 	return nil
 }
 
